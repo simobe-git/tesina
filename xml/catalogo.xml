@@ -1,0 +1,74 @@
+<catalogo>
+    <gioco>
+        <nome>The Legend of Zelda: Breath of the Wild</nome>
+        <prezzo>59.99</prezzo>
+        <anno>2017</anno>
+        <sconto>10</sconto>
+        <bonus>5</bonus>
+        <descrizione>descrizione 1</descrizione>
+        <immagine>../isset/game-image/zelta.jpg</immagine>
+    </gioco>
+    <gioco>
+        <nome>The Witcher 3: Wild Hunt</nome>
+        <prezzo>39.99</prezzo>
+        <anno>2015</anno>
+        <sconto>10</sconto>
+        <bonus>5</bonus>
+        <descrizione>descrizione 2</descrizione>
+        <immagine>../isset/game-image/witcher.jpg</immagine>
+    </gioco>
+    <gioco>
+        <nome>Cyberpunk 2077</nome>
+        <prezzo>49.99</prezzo>
+        <anno>2020</anno>
+        <sconto>10</sconto>
+        <bonus>5</bonus>
+        <descrizione>descrizione 3</descrizione>
+        <immagine>../isset/game-image/cyberpunk.jpg</immagine>
+    </gioco>
+    <gioco>
+        <nome>FC 25</nome>
+        <prezzo>69.99</prezzo>
+        <anno>2024</anno>
+        <sconto>15</sconto>
+        <bonus>10</bonus>
+        <descrizione>descrizione 4</descrizione>
+        <immagine>..\isset\game-image\fc 25.webp</immagine>
+    </gioco>
+    <gioco>
+        <nome>Dragon Ball: Sparking ZERO</nome>
+        <prezzo>69.99</prezzo>
+        <anno>2024</anno>
+        <sconto>5</sconto>
+        <bonus>5</bonus>
+        <descrizione>descrizione 5</descrizione>
+        <immagine>..\isset\game-image\dragon ball.jpg</immagine>
+    </gioco>
+    <gioco>
+        <nome>Call of Duty: Black Ops 6</nome>
+        <prezzo>79.99</prezzo>
+        <anno>2024</anno>
+        <sconto>5</sconto>
+        <bonus>10</bonus>
+        <descrizione>descrizione 6</descrizione>
+        <immagine>..\isset\game-image\CoD.avif</immagine>
+    </gioco>
+    <gioco>
+        <nome>TCG Card Shop Simulator</nome>
+        <prezzo>12.79</prezzo>
+        <anno>2024</anno>
+        <sconto>5</sconto>
+        <bonus>5</bonus>
+        <descrizione>descrizione 7</descrizione>
+        <immagine>..\isset\game-image\tcg.jpg</immagine>
+    </gioco>
+    <gioco>
+        <nome>Planet Zoo</nome>
+        <prezzo>44.99</prezzo>
+        <anno>2019</anno>
+        <sconto>15</sconto>
+        <bonus>5</bonus>
+        <descrizione>descrizione 7</descrizione>
+        <immagine>..\isset\game-image\zoo.avif</immagine>
+    </gioco>
+</catalogo>

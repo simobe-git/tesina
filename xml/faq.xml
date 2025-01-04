@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<faqs>
+    <faq id="1">
+        <domanda>Come posso ottenere più crediti?</domanda>
+        <risposta>Puoi ottenere più crediti effettuando acquisti o richiedendoli all'admin.</risposta>
+        <data_creazione>2024-03-15</data_creazione>
+        <fonte>admin</fonte>
+    </faq>
+    <faq id="2">
+        <domanda>Come funziona il sistema di sconti?</domanda>
+        <risposta>Gli sconti si applicano automaticamente in base alla tua reputazione o ai crediti spesi.</risposta>
+        <data_creazione>2024-03-15</data_creazione>
+        <fonte>admin</fonte>
+    </faq>
+    <faq id="3">
+        <domanda>Come posso acquistare un gioco?</domanda>
+        <risposta>Aggiungi il gioco al carrello e procedi al checkout con i tuoi crediti.</risposta>
+        <data_creazione>2024-03-15</data_creazione>
+        <fonte>admin</fonte>
+    </faq>
+    <faq id="4">
+        <domanda>Come si ottengono i crediti?</domanda>
+        <risposta>Puoi richiedere crediti tramite la sezione apposita nel tuo profilo.</risposta>
+        <data_creazione>2024-03-15</data_creazione>
+        <fonte>admin</fonte>
+    </faq>
+    <faq id="5">
+        <domanda>Quanto tempo ci vuole per ricevere il gioco?</domanda>
+        <risposta>I giochi digitali sono disponibili immediatamente dopo l'acquisto.</risposta>
+        <data_creazione>2024-03-15</data_creazione>
+        <fonte>forum</fonte>
+    </faq>
+    <faq id="6">
+        <domanda>Gli sconti sono cumulabili?</domanda>
+        <risposta>No, viene applicato lo sconto più vantaggioso.</risposta>
+        <data_creazione>2024-03-15</data_creazione>
+        <fonte>admin</fonte>
+    </faq>
+    <faq id="7">
+        <domanda>Come funziona il sistema di recensioni?</domanda>
+        <risposta>Puoi recensire i giochi che hai acquistato e valutare le recensioni di altri utenti.</risposta>
+        <data_creazione>2024-03-15</data_creazione>
+        <fonte>admin</fonte>
+    </faq>
+    <faq id="8">
+        <domanda>Posso regalare crediti ad altri utenti?</domanda>
+        <risposta>No, i crediti sono personali e non trasferibili.</risposta>
+        <data_creazione>2024-03-15</data_creazione>
+        <fonte>admin</fonte>
+    </faq>
+    <faq id="9">
+        <domanda>Come funzionano i bonus?</domanda>
+        <risposta>I bonus sono crediti extra che ricevi acquistando determinati giochi.</risposta>
+        <data_creazione>2024-03-15</data_creazione>
+        <fonte>forum</fonte>
+    </faq>
+    <faq id="10">
+        <domanda>Quanto dura il download di un gioco?</domanda>
+        <risposta>Dipende dalla dimensione del gioco e dalla tua connessione internet.</risposta>
+        <data_creazione>2024-03-15</data_creazione>
+        <fonte>forum</fonte>
+    </faq>
+    <faq id="11">
+        <domanda>Come si calcola la reputazione?</domanda>
+        <risposta>La reputazione si basa sui giudizi ricevuti dalle tue recensioni.</risposta>
+        <data_creazione>2024-03-15</data_creazione>
+        <fonte>admin</fonte>
+    </faq>
+</faqs>

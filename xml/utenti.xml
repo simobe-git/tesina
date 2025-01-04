@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<utenti>
+  <utente>
+    <username>cliente1</username>
+    <ruolo>cliente</ruolo>
+    <avatar>avatar1.jpg</avatar>
+  </utente>
+  <utente>
+    <username>admin1</username>
+    <ruolo>admin</ruolo>
+    <avatar>default_avatar.jpg</avatar>
+  </utente>
+  <utente>
+    <username>bella</username>
+    <ruolo>cliente</ruolo>
+    <avatar>default_avatar.jpg</avatar>
+  </utente>
+  <utente>
+    <username>belli</username>
+    <ruolo>cliente</ruolo>
+    <avatar>default_avatar.jpg</avatar>
+  </utente>
+  <utente>
+    <username>simonesimonesimone</username>
+    <ruolo>cliente</ruolo>
+    <avatar>default_avatar.jpg</avatar>
+  </utente>
+  <utente>
+    <username>cliente3</username>
+    <ruolo>cliente</ruolo>
+    <avatar>avatar2.jpg</avatar>
+  </utente>
+</utenti>

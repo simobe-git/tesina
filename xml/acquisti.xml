@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<acquisti>
+    <acquisto>
+        <id>1</id>
+        <username>cliente1</username>
+        <codice_gioco>10001</codice_gioco>
+        <prezzo>59.99</prezzo>
+        <data>2024-03-15</data>
+    </acquisto>
+    <!-- altri acquisti... -->
+<acquisto id="674895a4304a5"><username>cliente4</username><codice_gioco>10012</codice_gioco><prezzo_originale>59.99</prezzo_originale><prezzo_pagato>59.99</prezzo_pagato><sconto_applicato>0</sconto_applicato><bonus_ottenuti>0</bonus_ottenuti><data>2024-11-28</data></acquisto></acquisti>
