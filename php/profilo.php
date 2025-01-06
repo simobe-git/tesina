@@ -475,6 +475,19 @@ $avatar_attuale = getAvatarUtente($_SESSION['username']);
                         </div>
                         <p class="descrizione">Tiene conto del peso dei giudizi in base a chi li ha dati</p>
                     </div>
+
+                    <!-- Pulsante per richiesta diventare admin con minimo 9 di reputazione base e pesata-->
+                    <div class="reputazione-item">
+                        <?php if($reputazione['base'] >= 9 && $reputazione['pesata'] >= 9){ ?>
+                            <h3>Richiesta Admin</h3>
+                            <button type="submit" name="richiesta_admin" class="btn-richiedi">
+                                Invia Richiesta
+                            </button>
+                        <?php } else{ ?>
+                            <h3>Richiesta Admin</h3>
+                            <p>Il punteggio di reputazione base e pesata deve essere minimo 9</p>
+                        <?php } ?>
+                    </div>
                 </div>
             </div>
 
