@@ -504,7 +504,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['richesta_admin'])) {
                     <div class="reputazione-item">
                         <?php if($reputazione['base'] >= 6 && $reputazione['pesata'] >= 6){ //modificare i valori e mettere a 9?>
                             <h3>Richiesta Admin</h3>
-                            <!-- Richiesta modifica -->
                             <form method="post" action="profilo.php">
                                 <button type="submit" name="richesta_admin">Invia</button>
                             </form>
