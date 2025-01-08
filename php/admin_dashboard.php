@@ -50,6 +50,7 @@ if (isset($_POST['accetta'])) {
     header("Location: admin_dashboard.php");
     exit();
 }
+//testo prova
 ?>
 
 <!DOCTYPE html>
