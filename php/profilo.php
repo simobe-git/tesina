@@ -123,6 +123,30 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['cambia_avatar'])) {
 // recupera l'avatar attuale
 $avatar_attuale = getAvatarUtente($_SESSION['username']);
 
+// aggiorno stato utente a admin
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['richesta_admin'])) {
+    
+    // carica file xml utenti modificando il ruolo dell'utente in richiesta_admin
+    $xml_file = '../xml/utenti.xml';
+    $xml = simplexml_load_file($xml_file);
+    $aggiornato = false;
+
+    //trova utente nel file xml e cambia il ruolo in richiesta_admin
+    foreach ($xml->utente as $utente) {
+        if ((string)$utente->username === $_SESSION['username']) {
+            $utente->ruolo = 'richiesta_admin';
+            $aggiornato = true;
+            break;
+        }
+    }
+
+    // verifica se l'aggiornamento è andato a buon fine
+    if($aggiornato){
+        $xml->asXML($xml_file);
+    }else{
+        $errore = "Errore nell'aggiornamento del ruolo.";
+    }
+}
 ?>
 
 <!DOCTYPE html>
@@ -474,6 +498,20 @@ $avatar_attuale = getAvatarUtente($_SESSION['username']);
                             <div class="progress" style="width: <?php echo ($reputazione['pesata'] * 10); ?>%"></div>
                         </div>
                         <p class="descrizione">Tiene conto del peso dei giudizi in base a chi li ha dati</p>
+                    </div>
+
+                    <!-- Pulsante per richiesta diventare admin con minimo 9 di reputazione base e pesata-->
+                    <div class="reputazione-item">
+                        <?php if($reputazione['base'] >= 6 && $reputazione['pesata'] >= 6){ //modificare i valori e mettere a 9?>
+                            <h3>Richiesta Admin</h3>
+                            <!-- Richiesta modifica -->
+                            <form method="post" action="profilo.php">
+                                <button type="submit" name="richesta_admin">Invia</button>
+                            </form>
+                        <?php } else{ ?>
+                            <h3>Richiesta Admin</h3>
+                            <p>Il punteggio di reputazione base e pesata deve essere minimo 9</p>
+                        <?php } ?>
                     </div>
                 </div>
             </div>
