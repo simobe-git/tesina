@@ -134,7 +134,7 @@ if ($connessione->query($sql) === TRUE) {
 
 // inserimento admin
 $sql = "INSERT INTO utenti (nome, cognome, username, email, password, tipo_utente, crediti) 
-        VALUES ('Mario', 'Rossi', 'admin', 'admin@gaming.it', 'Admin123!', 'admin', 0)";
+        VALUES ('Mario', 'Rossi', 'admin1', 'admin@gaming.it', 'Admin123!', 'admin', 0)";
 
 if ($connessione->query($sql) === TRUE) {
     echo "Admin inserito con successo<br>";
