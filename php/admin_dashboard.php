@@ -47,10 +47,18 @@ if (isset($_POST['accetta'])) {
     $utente = $xml->xpath("//utente[username='$username']")[0];
     $utente->ruolo = 'admin';
     $xml->asXML($xml_file);
+    
+    // modifichiamo lo stato utente nel database
+    $query_utente = "UPDATE utenti SET tipo_utente = 'admin' WHERE username = '$username'";
+    $result = mysqli_query($connessione, $query_utente);
+    if (!$result) {
+        die("Errore nella query $query_utente: " . mysqli_error($connessione));
+    }
+    
     header("Location: admin_dashboard.php");
     exit();
 }
-//prova
+
 ?>
 
 <!DOCTYPE html>
