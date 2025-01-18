@@ -7,8 +7,8 @@ session_start();
 
 require_once("connessione.php");
 
-$sql = "SELECT * FROM videogiochi";
-$result = mysqli_query($connessione,$sql);
+$query_offerte = "SELECT * FROM videogiochi WHERE prezzo_attuale <> prezzo_originale";
+$risultato = mysqli_query($connessione,$query_offerte);
 
 // gestione dell'aggiunta al carrello
 if(isset($_POST['aggiungi_al_carrello']) && isset($_POST['codice_gioco'])) {
@@ -51,34 +51,38 @@ if(isset($_POST['aggiungi_al_carrello']) && isset($_POST['codice_gioco'])) {
         <h1>Tutti gli Articoli</h1>
     </header>
 
+    <!-- griglia dei videogiochi -->
     <div class="product-grid">
         <?php
-            if(mysqli_num_rows($result) > 0){
-
-                while($row = mysqli_fetch_assoc($result)){
+        if ($risultato->num_rows > 0) {
+            while ($gioco = $risultato->fetch_assoc()) {
+                ?>
+                <div class="product-item">
+                    <a href="dettaglio_gioco.php?id=<?php echo $gioco['codice']; ?>">
+                        <img src="<?php echo htmlspecialchars($gioco['immagine']); ?>" 
+                             alt="<?php echo htmlspecialchars($gioco['nome']); ?>">
+                    </a>
+                    <h2><?php echo htmlspecialchars($gioco['nome']); ?></h2>
+                    <p class="descrizione"><?php echo htmlspecialchars($gioco['descrizione']); ?></p>
                     
-                    // stampiamo solo giochi che hanno uno sconto
-                    if($row['prezzo_attuale'] != $row['prezzo_originale']){
-
-                        echo '<div class="product-item">';
-                        
-                        // mostriamo l'immagine richiamando il link nel database
-                        echo '<img src="' . $row['immagine'] . '" alt="' . $row['nome'] . '">'; 
-                        echo '<h3>' . $row['nome'] . '</h3>';
-                        echo '<p class="price">';
-                        echo '<span class="current-price">€ ' . $row['prezzo_attuale'] . '</span>';
-                        echo ' <span class="original-price">€ ' . $row['prezzo_originale'] . '</span>';
-                        echo '</p>';
-                        echo '<form method="POST" action="carrello.php">
-                            <input type="hidden" name="codice_gioco" value="' . $row['codice'] . '">
-                            <button type="submit" name="aggiungi" class="btn-acquista">Aggiungi al Carrello</button>
-                        </form>';
-                        echo '</div>';
-                    }
-                }
-            }else{
-                echo '<p>Nessun prodotto trovato</p>';
-            }
+                    <div class="prezzi">
+                        <div class="prezzo-container">
+                            <div class="prezzo-originale"><?php echo $gioco['prezzo_originale']; ?> crediti</div>
+                                <div class="prezzo-scontato">
+                                    <?php echo $gioco['prezzo_attuale']; ?> crediti
+                                </div>
+                        </div>
+                    </div>
+                    
+                    <form method="POST" action="carrello.php">
+                        <input type="hidden" name="codice_gioco" value="<?php echo $gioco['codice']; ?>">
+                        <button type="submit" name="aggiungi" class="btn-acquista">Aggiungi al Carrello</button>
+                    </form>
+                </div>
+            <?php }
+        } else {
+            echo "<p>Nessun gioco trovato nel catalogo.</p>";
+        }
         ?>
     </div>
     

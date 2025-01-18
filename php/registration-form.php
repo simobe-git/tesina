@@ -18,20 +18,6 @@ function aggiorna_file_xml($username, $password, $ruolo = 'cliente') {
     $xml->asXML($xml_file);
 }
 
-/* DA METTERE NELLA PAGINA DELL'ADMIN, CHE DUNQUE PUO' ACCETTARE O MENO LA RICHIESTA DI UN CLIENTE DI DIVENTARE ADMIN 
-function promuovi_a_admin($username) {
-    $xml_file = '../xml/utenti.xml';
-    $xml = simplexml_load_file($xml_file);
-
-    foreach ($xml->utente as $utente) {
-        if ((string)$utente->username === $username) {
-            $utente->ruolo = 'admin';
-            break;
-        }
-    }
-
-    $xml->asXML($xml_file);
-}*/
 
     $name = $_POST['name']; 
     $email = $_POST['email'];

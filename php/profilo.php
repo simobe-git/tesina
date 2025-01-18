@@ -505,7 +505,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['richesta_admin'])) {
                         <?php if($reputazione['base'] >= 6 && $reputazione['pesata'] >= 6){ //modificare i valori e mettere a 9?>
                             <h3>Richiesta Admin</h3>
                             <form method="post" action="profilo.php">
-                                <button type="submit" name="richesta_admin">Invia</button>
+                                <button type="submit" name="richesta_admin" class="btn-richiedi">Invia</button>
                             </form>
                         <?php } else{ ?>
                             <h3>Richiesta Admin</h3>
@@ -513,6 +513,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['richesta_admin'])) {
                         <?php } ?>
                     </div>
                 </div>
+                <h2><br><a href="storico_acquisti.php">Storico acquisti</a></h2>
             </div>
 
             <div class="sezione">

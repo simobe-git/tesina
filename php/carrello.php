@@ -112,7 +112,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $errore = "Errore durante l'acquisto: " . $e->getMessage();
             }
         } else {
-            $errore = "Crediti insufficienti per completare l'acquisto";
+            $errore = "Crediti insufficienti per completare l'acquisto <a href='profilo.php'>Ricarica ora</a>";
         }
     }
 }
