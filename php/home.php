@@ -221,7 +221,7 @@ if ($result->num_rows > 0) {
             <?php }else{ ?>
                 <h1>Bentornato su GameShop, <strong class="username-highlight"><?php echo $_SESSION['username']; }?></strong></h1>
             <p>Il miglior negozio di videogiochi online</p>
-            <a href="#" class="cta-button">Scopri di più</a>
+            <a href="catalogo.php" class="cta-button">Scopri di più</a>
         </div>
         <div class="hero-image-container">
             <img src="../isset/banner-image.jpg" alt="Immagine di Videogioco" class="hero-image">
@@ -243,10 +243,10 @@ if ($result->num_rows > 0) {
                         <?php if($gioco['prezzo_attuale'] < $gioco['prezzo_originale']): ?>
                             <p class="price">
                                 <span style="font-size: 1.4em; color: #2ecc71; font-weight: bold;">
-                                    €<?php echo htmlspecialchars($gioco['prezzo_attuale']); ?>
+                                    Crediti: <?php echo htmlspecialchars($gioco['prezzo_attuale']); ?>
                                 </span>
                                 <span style="font-size: 1.2em; color: #999; text-decoration: line-through; margin-left: 10px;">
-                                    €<?php echo htmlspecialchars($gioco['prezzo_originale']); ?>
+                                    Crediti: <?php echo htmlspecialchars($gioco['prezzo_originale']); ?>
                                 </span>
                             </p>
                         <?php else: ?>
