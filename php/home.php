@@ -221,7 +221,7 @@ if ($result->num_rows > 0) {
             <?php }else{ ?>
                 <h1>Bentornato su GameShop, <strong class="username-highlight"><?php echo $_SESSION['username']; }?></strong></h1>
             <p>Il miglior negozio di videogiochi online</p>
-            <a href="#" class="cta-button">Scopri di più</a>
+            <a href="catalogo.php" class="cta-button">Scopri di più</a>
         </div>
         <div class="hero-image-container">
             <img src="../isset/banner-image.jpg" alt="Immagine di Videogioco" class="hero-image">
