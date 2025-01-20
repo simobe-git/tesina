@@ -243,10 +243,10 @@ if ($result->num_rows > 0) {
                         <?php if($gioco['prezzo_attuale'] < $gioco['prezzo_originale']): ?>
                             <p class="price">
                                 <span style="font-size: 1.4em; color: #2ecc71; font-weight: bold;">
-                                    €<?php echo htmlspecialchars($gioco['prezzo_attuale']); ?>
+                                    Crediti: <?php echo htmlspecialchars($gioco['prezzo_attuale']); ?>
                                 </span>
                                 <span style="font-size: 1.2em; color: #999; text-decoration: line-through; margin-left: 10px;">
-                                    €<?php echo htmlspecialchars($gioco['prezzo_originale']); ?>
+                                    Crediti: <?php echo htmlspecialchars($gioco['prezzo_originale']); ?>
                                 </span>
                             </p>
                         <?php else: ?>
