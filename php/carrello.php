@@ -259,13 +259,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             <h3><?php echo htmlspecialchars($gioco['nome']); ?></h3>
                             <p class="genere"><?php echo htmlspecialchars($gioco['genere']); ?></p>
                             <?php if ($sconto['percentuale'] > 0): ?>
-                                <div class="prezzo-originale">€<?php echo number_format($gioco['prezzo_attuale'], 2); ?></div>
+                                <div class="prezzo-originale">Crediti Iniziali: <?php echo number_format($gioco['prezzo_attuale'], 2); ?></div>
                                 <div class="prezzo-scontato">
-                                    €<?php echo number_format($prezzo_scontato, 2); ?>
+                                    Crediti Attuali: <?php echo number_format($prezzo_scontato, 2); ?>
                                     <span class="sconto-badge">-<?php echo $sconto['percentuale']; ?>%</span>
                                 </div>
                             <?php else: ?>
-                                <div class="prezzo">€<?php echo number_format($gioco['prezzo_attuale'], 2); ?></div>
+                                <div class="prezzo">Crediti Richiesti: <?php echo number_format($gioco['prezzo_attuale'], 2); ?></div>
                             <?php endif; ?>
                         </div>
                         <form method="POST">
@@ -287,7 +287,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         <?php if ($totale > 0): ?>
             <div class="totale">
-                Totale: €<?php echo number_format($totale, 2); ?>
+                Crediti Totali: <?php echo number_format($totale, 2); ?>
             </div>
             <div class="azioni-finali">
                 <a href="catalogo.php" class="btn-continua-shopping">Continua ad acquistare</a>
