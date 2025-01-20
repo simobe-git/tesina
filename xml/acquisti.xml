@@ -8,4 +8,4 @@
         <data>2024-03-15</data>
     </acquisto>
     <!-- altri acquisti... -->
-</acquisti>
+<acquisto id="678e89eab8cc9"><username>cliente3</username><codice_gioco>10003</codice_gioco><prezzo_originale>49.99</prezzo_originale><prezzo_pagato>49.99</prezzo_pagato><sconto_applicato>0</sconto_applicato><bonus_ottenuti>0</bonus_ottenuti><data>2025-01-20</data></acquisto><acquisto id="678e89eab911d"><username>cliente3</username><codice_gioco>10012</codice_gioco><prezzo_originale>59.99</prezzo_originale><prezzo_pagato>59.99</prezzo_pagato><sconto_applicato>0</sconto_applicato><bonus_ottenuti>0</bonus_ottenuti><data>2025-01-20</data></acquisto><acquisto id="678e8ac12bbae"><username>cliente3</username><codice_gioco>10012</codice_gioco><prezzo_originale>59.99</prezzo_originale><prezzo_pagato>59.99</prezzo_pagato><sconto_applicato>0</sconto_applicato><bonus_ottenuti>0</bonus_ottenuti><data>2025-01-20</data></acquisto></acquisti>

@@ -51,6 +51,7 @@ if (file_exists($xml_file)) {
                         'prezzo_originale' => (float)$acquisto->prezzo_originale,
                         'prezzo_pagato' => (float)$acquisto->prezzo_pagato,
                         'sconto' => isset($acquisto->sconto_applicato) ? (float)$acquisto->sconto_applicato : 0,
+                        'bonus' => isset($acquisto->bonus_ottenuti) ? (float)$acquisto->bonus_ottenuti : 0,
                         'data' => (string)$acquisto->data
                     ];
                 } else {
@@ -264,6 +265,10 @@ $totale_bonus = array_sum(array_column($acquisti, 'bonus'));
                                 <?php if ($acquisto['bonus'] > 0): ?>
                                     <span class="bonus-badge">
                                         +<?php echo $acquisto['bonus']; ?> crediti
+                                    </span>
+                                <?php else: ?>
+                                    <span class="bonus-badge">
+                                        Nessun bonus
                                     </span>
                                 <?php endif; ?>
                             </td>
