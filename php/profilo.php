@@ -147,6 +147,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['richesta_admin'])) {
         $errore = "Errore nell'aggiornamento del ruolo.";
     }
 }
+
+// visualizza storico acquisti
+if (isset($_POST['storico_acquisti'])) {
+    header('Location: storico_acquisti.php');
+    exit();
+}
 ?>
 
 <!DOCTYPE html>
@@ -513,7 +519,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['richesta_admin'])) {
                         <?php } ?>
                     </div>
                 </div>
-                <h2><br><a href="storico_acquisti.php">Storico acquisti</a></h2>
+                <h2><br>Storico Acquisti</h2>
+                <form method="POST" action="profilo.php">
+                    <button type="submit" name="storico_acquisti" class="btn-richiedi">
+                        Visualizza
+                    </button>
+                </form>
             </div>
 
             <div class="sezione">
