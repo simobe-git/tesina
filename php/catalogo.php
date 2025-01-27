@@ -191,10 +191,18 @@ $risultato = $connessione->query($query);
                         </div>
                     </div>
                     
-                    <form method="POST" action="carrello.php">
-                        <input type="hidden" name="codice_gioco" value="<?php echo $gioco['codice']; ?>">
-                        <button type="submit" name="aggiungi" class="btn-acquista">Aggiungi al Carrello</button>
-                    </form>
+                    <a href="dettaglio_gioco.php?id=<?php echo $gioco['codice']; ?>" 
+                   style="display: block; 
+                          width: 90%; 
+                          margin: 10px auto; 
+                          padding: 10px; 
+                          background-color: #007bff; 
+                          color: white; 
+                          text-align: center; 
+                          text-decoration: none; 
+                          border-radius: 5px;">
+                    Acquista ora
+                </a>
                 </div>
             <?php }
         } else {
