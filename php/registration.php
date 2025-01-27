@@ -28,28 +28,7 @@ if(isset($_POST['registerBtn'])){ ?>
     <link rel="stylesheet" href="../css/registration.css">
 </head>
 <body>
-    
-    <nav class="navbar">
-        <div class="logo">
-            <a href="#">GameShop</a>
-        </div>
-        <ul class="nav-links">
-            <li><a href="home.php">Home</a></li>
-            <li><a href="catalogo.php">Giochi</a></li>
-            <li><a href="offerte.php">Offerte</a></li>
-            <?php if(isset($_SESSION['statoLogin'])) : ?>
-                <li><a href="logout.php">Logout</a></li>
-            <?php else: ?>
-                <li><a href="login.php">Login</a></li>
-            <?php endif; ?>
-            <li><a href="contatti.php">Contatti</a></li>
-        </ul>
-        <div class="hamburger-menu">
-            <span></span>
-            <span></span>
-            <span></span>
-        </div>
-    </nav>
+    <?php include('menu.php'); ?>
 
     <div class="login-container">
         <div class="login-form">

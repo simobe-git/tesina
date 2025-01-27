@@ -3,6 +3,12 @@ session_start();
 require_once('connessione.php');
 require_once('funzioni_sconti_bonus.php');
 
+// se utente è un admin lo reindirizziamo alla home
+if (isset($_SESSION['ruolo']) && $_SESSION['ruolo'] === 'admin') {
+    header('Location: home.php');
+    exit();
+}
+
 // verifica se l'utente è loggato
 if (!isset($_SESSION['statoLogin']) || !isset($_SESSION['username'])) {
     $_SESSION['redirect_after_login'] = 'carrello.php';

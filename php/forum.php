@@ -2,6 +2,12 @@
 session_start();
 require_once('connessione.php');
 
+// se utente è un admin lo reindirizziamo alla home
+if (isset($_SESSION['ruolo']) && $_SESSION['ruolo'] === 'admin') {
+    header('Location: home.php');
+    exit();
+}
+
 // funzione per caricare il file XML delle domande
 function caricaDomande() {
     $xmlFile = '../xml/domande.xml';
