@@ -201,7 +201,7 @@ $risultato = $connessione->query($query);
                           text-align: center; 
                           text-decoration: none; 
                           border-radius: 5px;">
-                    Acquista ora
+                    Acquista
                 </a>
                 </div>
             <?php }
