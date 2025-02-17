@@ -64,35 +64,30 @@ if ($connessione->query($sql) === TRUE) {
 }
 
 // creazione tabella giochi (se non esiste già)
-$sql = "CREATE TABLE IF NOT EXISTS gioco_da_tavolo (
+$sql = "CREATE TABLE IF NOT EXISTS gioco_tavolo (
     codice INT(5) NOT NULL PRIMARY KEY,
     titolo VARCHAR(50) NOT NULL, -- Nome 
     prezzo_originale DOUBLE(6,2) NOT NULL,
     prezzo_attuale DOUBLE(6,2) NOT NULL,
-    disponibile BOOLEAN NOT NULL DEFAULT TRUE, -- Disponibilità
+    disponibile BIT NOT NULL, -- (0 = non disponibile, 1 = disponibile, NULL = non specificato)
     categoria VARCHAR(30) NOT NULL,
     min_num_giocatori INT(2) NOT NULL, -- Si poteva implementare anche come una stringa
     max_num_giocatori INT(2) NOT NULL,
-    min_eta VARCHAR(3) NOT NULL, --VARCHAR posso inserire età con carattere + per specificare età minima in sù
+    min_eta VARCHAR(3) NOT NULL, -- varchar posso inserire età con carattere + per specificare età minima in sù
     avg_partita VARCHAR(10) NOT NULL, -- VARCHAR specifica durate diverse parita
     data_rilascio DATE NOT NULL,
     nome_editore VARCHAR(30) NOT NULL,
-    autore VARCHAR(30) NOT NULL,
+    autore VARCHAR(100) NOT NULL, -- N/A specifica non disponibile
     descrizione TEXT,
-    meccaniche TEXT, -- Meccaniche principali:
-                        -- Movimento: come si muovono i giocatori o le pedine.
-                        -- Combattimento: se presente, come avviene il combattimento.
-                        -- Raccolta risorse: come i giocatori ottengono risorse o punti.
-                        -- Scelte strategiche: decisioni che i giocatori devono prendere durante il gioco.
-                        -- Interazione tra giocatori: come i giocatori possono influenzarsi a vicenda.
+    meccaniche SET('Movimento','Combattimento','Raccolta risorse','Scelte strategiche','Interazione tra giocatori') NOT NULL, -- SET assegna più di un valore
     ambiantazione ENUM('Fantasy', 'Storico', 'Fantascienza', 'Distopica', 'Realistica') NOT NULL, -- Valori di default da poter scegliere (sono quelli dati da temperini)
     immagine VARCHAR(255) -- imamgine delle componenti o logo  
 )";
 
 if ($connessione->query($sql) === TRUE) {
-    echo "Tabella videogiochi creata con successo o già esistente<br>";
+    echo "Tabella giochi creata con successo o già esistente<br>";
 } else {
-    echo "Errore nella creazione della tabella videogiochi: " . $connessione->error . "<br>";
+    echo "Errore nella creazione della tabella giochi: " . $connessione->error . "<br>";
 }
 
 // creazione tabella recensioni
@@ -103,7 +98,7 @@ $sql = "CREATE TABLE IF NOT EXISTS recensioni (
     testo TEXT,
     data_recensione DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (username) REFERENCES utenti(username) ON DELETE CASCADE,
-    FOREIGN KEY (codice_gioco) REFERENCES videogiochi(codice) ON DELETE CASCADE
+    FOREIGN KEY (codice_gioco) REFERENCES gioco_tavolo(codice) ON DELETE CASCADE
 )";
 
 if ($connessione->query($sql) === TRUE) {
@@ -136,7 +131,7 @@ $sql = "CREATE TABLE IF NOT EXISTS bonus (
     codice_gioco INT(5),
     data_inizio DATE,
     data_fine DATE,
-    FOREIGN KEY (codice_gioco) REFERENCES videogiochi(codice) ON DELETE CASCADE
+    FOREIGN KEY (codice_gioco) REFERENCES gioco_tavolo(codice) ON DELETE CASCADE
 )";
 
 if ($connessione->query($sql) === TRUE) {
@@ -190,21 +185,9 @@ if ($connessione->query($sql) === TRUE) {
     echo "Errore nell'inserimento degli utenti: " . $connessione->error . "<br>";
 }
 
-// popolamento tabella videogiochi
-$sql = "INSERT IGNORE INTO videogiochi (codice, nome, prezzo_originale, prezzo_attuale, genere, data_rilascio, nome_editore, descrizione, immagine) VALUES
-    (10001, 'The Witcher 3', 59.99, 39.99, 'RPG', '2015-05-19', 'CD Projekt RED', 'Un epico gioco di ruolo fantasy', 'https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/292030/header.jpg?t=1730212926'),
-    (10002, 'FC 24', 69.99, 69.99, 'Sport', '2023-09-29', 'EA Sports', 'Il più recente simulatore di calcio', 'https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/2195250/header.jpg?t=1730826798'),
-    (10003, 'Cyberpunk 2077', 59.99, 49.99, 'RPG', '2020-12-10', 'CD Projekt RED', 'Un gioco di ruolo ambientato nel futuro', 'https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1091500/header.jpg?t=1730212296'),
-    (10004, 'Assassins Creed Valhalla', 59.99, 44.99, 'Azione/Avventura', '2020-11-10', 'Ubisoft', 'Avventura vichinga', 'https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/2208920/header.jpg?t=1732122317'),
-    (10005, 'Red Dead Redemption 2', 59.99, 39.99, 'Azione/Avventura', '2018-10-26', 'Rockstar Games', 'Epica avventura western', 'https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1174180/header.jpg?t=1720558643'),
-    (10006, 'God of War Ragnarök', 69.99, 59.99, 'Azione/Avventura', '2022-11-09', 'Sony', 'Epica avventura norrena', 'https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/2322010/header.jpg?t=1728067832'),
-    (10007, 'Spider-Man 2', 69.99, 69.99, 'Azione/Avventura', '2023-10-20', 'Sony', 'Le avventure dell\'Uomo Ragno', 'https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/2651280/header.jpg?t=1732310461'),
-    (10008, 'Final Fantasy XVI', 69.99, 49.99, 'RPG', '2023-06-22', 'Square Enix', 'Action RPG fantasy', 'https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/2515020/header.jpg?t=1732559903'),
-    (10009, 'Resident Evil 4', 59.99, 39.99, 'Horror', '2023-03-24', 'Capcom', 'Remake del classico horror', 'https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/2050650/header.jpg?t=1731387968'),
-    (10010, 'Horizon Forbidden West', 59.99, 29.99, 'Azione/RPG', '2022-02-18', 'Sony', 'Avventura post-apocalittica', 'https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/2420110/header.jpg?t=1725653368'),
-    (10011, 'Elden Ring', 59.99, 44.99, 'RPG', '2022-02-25', 'FromSoftware', 'Action RPG open world', 'https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1245620/header.jpg?t=1726158298'),
-    (10012, 'Diablo IV', 69.99, 59.99, 'RPG', '2023-06-06', 'Blizzard', 'Action RPG dark fantasy', 'https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/2344520/header.jpg?t=1728494275'),
-    (10013, 'F1 24', 59.99, 29.99, 'Sport', '2024-05-31', 'Codemasters', 'Simulatore di Formula 1', 'https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/2488620/header.jpg?t=1732562663')";
+// popolamento tabella giochi
+$sql = "INSERT IGNORE INTO gioco_tavolo (codice, titolo, prezzo_originale, prezzo_attuale, disponibile, categoria, min_num_giocatori, max_num_giocatori, min_eta, avg_partita, data_rilascio, nome_editore, autore, descrizione, meccaniche, ambiantazione, immagine) VALUES
+    (10001, 'Brass Birmingham', 105.00, 40.00, 1, 'Strategia', 2, 4, '14+', '60-120', 2018, 'Roxley', 'N/A', 'Brass: Birmingham è il seguito del gioco di strategia economica Brass, capolavoro di Martin Wallace del 2007. Brass: Birmingham racconta la storia di imprenditori in competizione tra loro a Birmingham durante la rivoluzione industriale tra il 1770 e il 1870.', 'Raccolta risorse,Scelte strategiche', 'Storico', 'https://cf.geekdo-images.com/UIlFaaTmaWms7F5xdEFgGA__imagepage/img/SitcV7akzI3P_dl8pPEneEpM-U4=/fit-in/900x600/filters:no_upscale():strip_icc()/pic3549793.jpg')";
 
 if ($connessione->query($sql) === TRUE) {
     echo "Dati inseriti nella tabella videogiochi<br>";

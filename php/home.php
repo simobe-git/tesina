@@ -15,7 +15,7 @@ if (isset($_SESSION['username'])) {
 }
 
 // query per selezionare 3 giochi casuali tra quelli presenti da mostrare a schermo
-$sql = "SELECT * FROM videogiochi ORDER BY RAND() LIMIT 3";
+$sql = "SELECT * FROM gioco_tavolo ORDER BY RAND() LIMIT 3";
 $result = $connessione->query($sql);
 
 $giochi = [];
@@ -220,8 +220,8 @@ if ($result->num_rows > 0) {
                 <h1>Benvenuti su GameShop</h1>
             <?php }else{ ?>
                 <h1>Bentornato su GameShop, <strong class="username-highlight"><?php echo $_SESSION['username']; }?></strong></h1>
-            <p>Il miglior negozio di videogiochi online</p>
-            <a href="#" class="cta-button">Scopri di più</a>
+            <p>Il miglior negozio di giochi da tavolo</p>
+            <a href="catalogo.php" class="cta-button">Scopri di più</a>
         </div>
         <div class="hero-image-container">
             <img src="../isset/banner-image.jpg" alt="Immagine di Videogioco" class="hero-image">
@@ -235,9 +235,9 @@ if ($result->num_rows > 0) {
         <?php foreach ($giochi as $gioco): ?>
             <div class="game-card">
                 <img src="<?php echo htmlspecialchars($gioco['immagine']); ?>" 
-                     alt="<?php echo htmlspecialchars($gioco['nome']); ?>">
+                     alt="<?php echo htmlspecialchars($gioco['titolo']); ?>">
                 <div class="game-info">
-                    <h3><?php echo htmlspecialchars($gioco['nome']); ?></h3>
+                    <h3><?php echo htmlspecialchars($gioco['titolo']); ?></h3>
                     <p class="descrizione"><?php echo htmlspecialchars($gioco['descrizione']); ?></p>
                     <div class="price-section" style="text-align: center;">
                         <?php if($gioco['prezzo_attuale'] < $gioco['prezzo_originale']): ?>

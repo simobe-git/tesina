@@ -12,7 +12,7 @@ if (isset($_SESSION['ruolo']) && $_SESSION['ruolo'] === 'admin') {
 $id_gioco = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 
 // recupera i dettagli del gioco
-$query = "SELECT * FROM videogiochi WHERE codice = ?";
+$query = "SELECT * FROM gioco_tavolo WHERE codice = ?";
 $stmt = $connessione->prepare($query);
 $stmt->bind_param("i", $id_gioco);
 $stmt->execute();
@@ -170,18 +170,24 @@ if (empty($bonus)) {
 
     <div class="dettaglio-container">
         <div class="dettaglio-gioco">
-            <h1 class="titolo-gioco"><?php echo htmlspecialchars($gioco['nome']); ?></h1>
+            <h1 class="titolo-gioco"><?php echo htmlspecialchars($gioco['titolo']); ?></h1>
             
             <div class="gioco-content">
                 <img class="gioco-immagine" src="<?php echo htmlspecialchars($gioco['immagine']); ?>" 
-                     alt="<?php echo htmlspecialchars($gioco['nome']); ?>">
+                     alt="<?php echo htmlspecialchars($gioco['titolo']); ?>">
                 
                 <div class="gioco-info">
                     <p class="descrizione"><?php echo htmlspecialchars($gioco['descrizione']); ?></p>
                     <div class="dettagli">
-                        <p><strong>Genere:</strong> <?php echo htmlspecialchars($gioco['genere']); ?></p>
+                        <p><strong>Categoria:</strong> <?php echo htmlspecialchars($gioco['categoria']); ?></p>
+                        <p><strong>Giocatori:</strong> <?php echo htmlspecialchars($gioco['min_num_giocatori']); ?> - <?php echo htmlspecialchars($gioco['max_num_giocatori']); ?></p>
+                        <p><strong>Et&aacute; Minima:</strong> <?php echo htmlspecialchars($gioco['min_eta']); ?></p>
+                        <p><strong>Durata Partita:</strong> <?php echo htmlspecialchars($gioco['avg_partita']); ?></p>
+                        <p><strong>Pubblicazione:</strong> <?php echo htmlspecialchars($gioco['data_rilascio']); ?></p>
                         <p><strong>Editore:</strong> <?php echo htmlspecialchars($gioco['nome_editore']); ?></p>
-                        <p><strong>Data di rilascio:</strong> <?php echo htmlspecialchars($gioco['data_rilascio']); ?></p>
+                        <p><strong>Autore:</strong> <?php echo htmlspecialchars($gioco['autore']); ?></p>
+                        <p><strong>Meccaniche:</strong> <?php echo htmlspecialchars($gioco['meccaniche']); ?></p>
+                        <p><strong>Ambientazione:</strong> <?php echo htmlspecialchars($gioco['ambiantazione']); ?></p>
                     </div>
                     
                     <div class="prezzi-acquisto">
