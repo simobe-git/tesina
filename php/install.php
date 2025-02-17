@@ -63,17 +63,30 @@ if ($connessione->query($sql) === TRUE) {
     echo "Errore nella creazione della tabella utenti: " . $connessione->error . "<br>";
 }
 
-// creazione della tabella videogiochi (se non esiste già)
-$sql = "CREATE TABLE IF NOT EXISTS videogiochi (
+// creazione tabella giochi (se non esiste già)
+$sql = "CREATE TABLE IF NOT EXISTS gioco_da_tavolo (
     codice INT(5) NOT NULL PRIMARY KEY,
-    nome VARCHAR(50) NOT NULL,
+    titolo VARCHAR(50) NOT NULL, -- Nome 
     prezzo_originale DOUBLE(6,2) NOT NULL,
     prezzo_attuale DOUBLE(6,2) NOT NULL,
-    genere VARCHAR(30) NOT NULL,
+    disponibile BOOLEAN NOT NULL DEFAULT TRUE, -- Disponibilità
+    categoria VARCHAR(30) NOT NULL,
+    min_num_giocatori INT(2) NOT NULL, -- Si poteva implementare anche come una stringa
+    max_num_giocatori INT(2) NOT NULL,
+    min_eta VARCHAR(3) NOT NULL, --VARCHAR posso inserire età con carattere + per specificare età minima in sù
+    avg_partita VARCHAR(10) NOT NULL, -- VARCHAR specifica durate diverse parita
     data_rilascio DATE NOT NULL,
     nome_editore VARCHAR(30) NOT NULL,
+    autore VARCHAR(30) NOT NULL,
     descrizione TEXT,
-    immagine VARCHAR(255)
+    meccaniche TEXT, -- Meccaniche principali:
+                        -- Movimento: come si muovono i giocatori o le pedine.
+                        -- Combattimento: se presente, come avviene il combattimento.
+                        -- Raccolta risorse: come i giocatori ottengono risorse o punti.
+                        -- Scelte strategiche: decisioni che i giocatori devono prendere durante il gioco.
+                        -- Interazione tra giocatori: come i giocatori possono influenzarsi a vicenda.
+    ambiantazione ENUM('Fantasy', 'Storico', 'Fantascienza', 'Distopica', 'Realistica') NOT NULL, -- Valori di default da poter scegliere (sono quelli dati da temperini)
+    immagine VARCHAR(255) -- imamgine delle componenti o logo  
 )";
 
 if ($connessione->query($sql) === TRUE) {
