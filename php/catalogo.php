@@ -3,14 +3,20 @@ session_start();
 require_once('connessione.php');
 require_once('funzioni_sconti_bonus.php');
 
+// se utente è un admin lo reindirizziamo alla home
+if (isset($_SESSION['ruolo']) && $_SESSION['ruolo'] === 'admin') {
+    header('Location: home.php');
+    exit();
+}
+
 function calcolaBonus($codiceGioco) {
     global $connessione;
     $bonus = [];
     
     // verifica se esiste un bonus nel database
-    $query = "SELECT b.*, v.nome as nome_gioco 
+    $query = "SELECT b.*, v.titolo as nome_gioco 
               FROM bonus b 
-              JOIN videogiochi v ON b.codice_gioco = v.codice 
+              JOIN gioco_tavolo v ON b.codice_gioco = v.codice 
               WHERE b.codice_gioco = ? 
               AND b.data_inizio <= CURRENT_DATE 
               AND b.data_fine >= CURRENT_DATE";
@@ -35,29 +41,29 @@ function calcolaBonus($codiceGioco) {
 }
 
 // gestione dell'ordinamento
-$ordinamento = isset($_GET['ordinamento']) ? $_GET['ordinamento'] : 'nome'; // default ordinamento per nome
+$ordinamento = isset($_GET['ordinamento']) ? $_GET['ordinamento'] : 'titolo'; // default ordinamento per nome
 $direzione = isset($_GET['direzione']) ? $_GET['direzione'] : 'ASC'; // default crescente
 
 // parametri di ordinamento
-$ordinamenti_permessi = ['nome', 'prezzo', 'data_rilascio'];
+$ordinamenti_permessi = ['titolo', 'prezzo', 'data_rilascio'];
 $direzioni_permesse = ['ASC', 'DESC'];
 
 if (!in_array($ordinamento, $ordinamenti_permessi)) {
-    $ordinamento = 'nome';
+    $ordinamento = 'titolo';
 }
 if (!in_array($direzione, $direzioni_permesse)) {
     $direzione = 'ASC';
 }
 
 // query per ottenere generi ed editori (univoci)
-$query_generi = "SELECT DISTINCT genere FROM videogiochi WHERE genere IS NOT NULL ORDER BY genere";
+$query_generi = "SELECT DISTINCT categoria FROM gioco_tavolo WHERE categoria IS NOT NULL ORDER BY categoria";
 $risultato_generi = $connessione->query($query_generi);
 
-$query_editori = "SELECT DISTINCT nome_editore FROM videogiochi WHERE nome_editore IS NOT NULL ORDER BY nome_editore";
+$query_editori = "SELECT DISTINCT nome_editore FROM gioco_tavolo WHERE nome_editore IS NOT NULL ORDER BY nome_editore";
 $risultato_editori = $connessione->query($query_editori);
 
 // gestione dei filtri
-$genere = isset($_GET['genere']) ? $_GET['genere'] : '';
+$genere = isset($_GET['categoria']) ? $_GET['categoria'] : '';
 $editore = isset($_GET['editore']) ? $_GET['editore'] : '';
 
 // query con i filtri
@@ -67,11 +73,11 @@ $query = "SELECT *,
             THEN prezzo_attuale 
             ELSE prezzo_originale 
           END AS prezzo_effettivo 
-          FROM videogiochi 
+          FROM gioco_tavolo
           WHERE 1=1";  // condizione sempre vera per concatenare la AND
 
 if ($genere) {
-    $query .= " AND genere = '" . $connessione->real_escape_string($genere) . "'";
+    $query .= " AND categoria = '" . $connessione->real_escape_string($genere) . "'";
 }
 if ($editore) {
     $query .= " AND nome_editore = '" . $connessione->real_escape_string($editore) . "'";
@@ -131,9 +137,9 @@ $risultato = $connessione->query($query);
                 <select class="filtro-select" id="genere" onchange="applicaFiltri()">
                     <option value="">Tutti i generi</option>
                     <?php while($genere = $risultato_generi->fetch_assoc()): ?>
-                        <option value="<?php echo htmlspecialchars($genere['genere']); ?>"
-                                <?php echo isset($_GET['genere']) && $_GET['genere'] === $genere['genere'] ? 'selected' : ''; ?>>
-                            <?php echo htmlspecialchars($genere['genere']); ?>
+                        <option value="<?php echo htmlspecialchars($genere['categoria']); ?>"
+                                <?php echo isset($_GET['categoria']) && $_GET['categoria'] === $genere['categoria'] ? 'selected' : ''; ?>>
+                            <?php echo htmlspecialchars($genere['categoria']); ?>
                         </option>
                     <?php endwhile; ?>
                 </select>
@@ -163,9 +169,9 @@ $risultato = $connessione->query($query);
                 <div class="product-item">
                     <a href="dettaglio_gioco.php?id=<?php echo $gioco['codice']; ?>">
                         <img src="<?php echo htmlspecialchars($gioco['immagine']); ?>" 
-                             alt="<?php echo htmlspecialchars($gioco['nome']); ?>">
+                             alt="<?php echo htmlspecialchars($gioco['titolo']); ?>">
                     </a>
-                    <h2><?php echo htmlspecialchars($gioco['nome']); ?></h2>
+                    <h2><?php echo htmlspecialchars($gioco['titolo']); ?></h2>
                     <p class="descrizione"><?php echo htmlspecialchars($gioco['descrizione']); ?></p>
                     
                     <div class="prezzi">
@@ -191,10 +197,18 @@ $risultato = $connessione->query($query);
                         </div>
                     </div>
                     
-                    <form method="POST" action="carrello.php">
-                        <input type="hidden" name="codice_gioco" value="<?php echo $gioco['codice']; ?>">
-                        <button type="submit" name="aggiungi" class="btn-acquista">Aggiungi al Carrello</button>
-                    </form>
+                    <a href="dettaglio_gioco.php?id=<?php echo $gioco['codice']; ?>" 
+                   style="display: block; 
+                          width: 90%; 
+                          margin: 10px auto; 
+                          padding: 10px; 
+                          background-color: #007bff; 
+                          color: white; 
+                          text-align: center; 
+                          text-decoration: none; 
+                          border-radius: 5px;">
+                    Acquista
+                </a>
                 </div>
             <?php }
         } else {

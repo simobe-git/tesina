@@ -3,6 +3,12 @@ session_start();
 require_once('connessione.php');
 require_once('calcola_reputazione.php');
 
+// se utente è un admin lo reindirizziamo alla home
+if (isset($_SESSION['ruolo']) && $_SESSION['ruolo'] === 'admin') {
+    header('Location: home.php');
+    exit();
+}
+
 // verifica se l'utente è loggato
 if (!isset($_SESSION['statoLogin']) || !isset($_SESSION['username'])) {
     // salviamo la pagina corrente per il reindirizzamento post-login
@@ -146,6 +152,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['richesta_admin'])) {
     }else{
         $errore = "Errore nell'aggiornamento del ruolo.";
     }
+}
+
+// visualizza storico acquisti
+if (isset($_POST['storico_acquisti'])) {
+    header('Location: storico_acquisti.php');
+    exit();
 }
 ?>
 
@@ -513,7 +525,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['richesta_admin'])) {
                         <?php } ?>
                     </div>
                 </div>
-                <h2><br><a href="storico_acquisti.php">Storico acquisti</a></h2>
+                <h2><br>Storico Acquisti</h2>
+                <form method="POST" action="profilo.php">
+                    <button type="submit" name="storico_acquisti" class="btn-richiedi">
+                        Visualizza
+                    </button>
+                </form>
             </div>
 
             <div class="sezione">
