@@ -54,7 +54,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         // e calcoliamo il totale
         $totale = 0;
         foreach ($_SESSION['carrello'] as $codice_gioco) {
-            $query = "SELECT prezzo_attuale FROM videogiochi WHERE codice = ?";
+            $query = "SELECT prezzo_attuale FROM gioco_tavolo WHERE codice = ?";
             $stmt = $connessione->prepare($query);
             $stmt->bind_param("i", $codice_gioco);
             $stmt->execute();
@@ -85,7 +85,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 }
 
                 foreach ($_SESSION['carrello'] as $codice_gioco) {
-                    $query = "SELECT * FROM videogiochi WHERE codice = ?";
+                    $query = "SELECT * FROM gioco_tavolo WHERE codice = ?";
                     $stmt = $connessione->prepare($query);
                     $stmt->bind_param("i", $codice_gioco);
                     $stmt->execute();
@@ -106,7 +106,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     $acquisto->addChild('data', date('Y-m-d'));
                 }
 
-                $xml->asXML($xml_file);
+                // Formattazione con DOMDocument
+                $dom = new DOMDocument('1.0'); //nuovo DOMDocument() permette di creare, modificare, leggere e salvare file XML in modo strutturato con PHP 
+                $dom->preserveWhiteSpace = false; //quando il file viene caricato elimina gli spazi bianchi
+                $dom->formatOutput = true; //senza questo scrive tutto su una riga sola 
+                $dom->loadXML($xml->asXML()); //converte SimpleXMLElement in un una stringa XML che viene poi caricata come oggetto DOMDocument applicando le regole di formattazione precedenti
+                
+                // Salvataggio nel file XML
+                $dom->save($xml_file);
                 
                 // svuotiamo il carrello
                 $_SESSION['carrello'] = array();
@@ -246,7 +253,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         
         if ($ha_prodotti):
             foreach ($_SESSION['carrello'] as $codice_gioco):
-                $query = "SELECT * FROM videogiochi WHERE codice = ?";
+                $query = "SELECT * FROM gioco_tavolo WHERE codice = ?";
                 $stmt = $connessione->prepare($query);
                 $stmt->bind_param("i", $codice_gioco);
                 $stmt->execute();
@@ -259,11 +266,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         ?>
                     <div class="gioco-carrello">
                         <img src="<?php echo htmlspecialchars($gioco['immagine']); ?>" 
-                             alt="<?php echo htmlspecialchars($gioco['nome']); ?>"
+                             alt="<?php echo htmlspecialchars($gioco['titolo']); ?>"
                              class="gioco-immagine">
                         <div class="info-gioco">
-                            <h3><?php echo htmlspecialchars($gioco['nome']); ?></h3>
-                            <p class="genere"><?php echo htmlspecialchars($gioco['genere']); ?></p>
+                            <h3><?php echo htmlspecialchars($gioco['titolo']); ?></h3>
+                            <p class="genere"><?php echo htmlspecialchars($gioco['categoria']); ?></p>
                             <?php if ($sconto['percentuale'] > 0): ?>
                                 <div class="prezzo-originale">€<?php echo number_format($gioco['prezzo_attuale'], 2); ?></div>
                                 <div class="prezzo-scontato">
