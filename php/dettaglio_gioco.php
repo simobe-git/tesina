@@ -187,7 +187,7 @@ if (empty($bonus)) {
                         <p><strong>Editore:</strong> <?php echo htmlspecialchars($gioco['nome_editore']); ?></p>
                         <p><strong>Autore:</strong> <?php echo htmlspecialchars($gioco['autore']); ?></p>
                         <p><strong>Meccaniche:</strong> <?php echo htmlspecialchars($gioco['meccaniche']); ?></p>
-                        <p><strong>Ambientazione:</strong> <?php echo htmlspecialchars($gioco['ambiantazione']); ?></p>
+                        <p><strong>Ambientazione:</strong> <?php echo htmlspecialchars($gioco['ambientazione']); ?></p>
                     </div>
                     
                     <div class="prezzi-acquisto">
