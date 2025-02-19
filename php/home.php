@@ -31,7 +31,7 @@ if ($result->num_rows > 0) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Piccione</title>
+    <title>Home</title>
     <link rel="stylesheet" href="../css/home.css">
     <link rel="stylesheet" href="../css/menu.css">
 
