@@ -174,13 +174,17 @@ $risultato = $connessione->query($query);
                     <h2><?php echo htmlspecialchars($gioco['titolo']); ?></h2>
                     <p class="descrizione"><?php echo htmlspecialchars($gioco['descrizione']); ?></p>
                     
+                    
                     <div class="prezzi">
+                        <!--Calcola sconto -->
                         <?php 
-                        $prezzo_base = $gioco['prezzo_attuale'] ?? $gioco['prezzo_originale'];
+                        $prezzo_base = $gioco['prezzo_attuale'] ?? $gioco['prezzo_originale']; //se prezzo attuale è null, allora il prezzo è quello originale
                         $sconto = calcolaSconto($_SESSION['username'] ?? null, $prezzo_base);
                         $prezzo_finale = $sconto['prezzo_finale'];
                         ?>
                         <div class="prezzo-container">
+
+                            <!--Mostra prezzo scontato con bonus-->
                             <?php if ($sconto['percentuale'] > 0): ?>
                                 <div class="prezzo-originale"><?php echo $prezzo_base; ?> crediti</div>
                                 <div class="prezzo-scontato">
@@ -188,15 +192,29 @@ $risultato = $connessione->query($query);
                                     <span class="sconto-info">(-<?php echo $sconto['percentuale']; ?>%)</span>
                                 </div>
                                 <div class="sconto-motivo"><?php echo $sconto['motivo']; ?></div>
+                            
                             <?php else: ?>
-                                <div class="prezzo"><?php echo $prezzo_base; ?> crediti</div>
+
+                                <!--Mostra prezzo scontato senza bonus-->
+                                <?php if ($gioco['prezzo_originale'] == $gioco['prezzo_attuale']): ?> <!--se coicidono gioco no sconto -->
+                                    
+                                    <div class="prezzo-scontato"><?php echo $gioco['prezzo_attuale']; ?> crediti</div>
+                                
+                                <?php else: ?> <!--gioco in sconto -->
+
+                                    <div class="prezzo-originale"><?php echo $gioco['prezzo_originale']; ?> crediti</div>
+                                    <div class="prezzo-scontato"><?php echo $gioco['prezzo_attuale']; ?> crediti</div>
+                                        
+                                <?php endif; ?>
+
                                 <?php if (isset($sconto['motivo'])): ?>
                                     <div class="no-sconto-info"><?php echo $sconto['motivo']; ?></div>
                                 <?php endif; ?>
+
                             <?php endif; ?>
                         </div>
                     </div>
-                    
+
                     <a href="dettaglio_gioco.php?id=<?php echo $gioco['codice']; ?>" 
                    style="display: block; 
                           width: 90%; 
