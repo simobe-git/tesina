@@ -44,8 +44,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['richiedi_crediti'])) {
         $richiesta->addChild('data', date('Y-m-d'));
         $richiesta->addChild('status', 'in attesa');
         
-        // salvataggio del file XML
-        if ($xml->asXML($xml_file)) {
+        /*
+        formattazione con DOMDocument nel salvataggio dei dati nel file XML viene aggiunta poiché 
+        quando si specificava una richiesta di crediti personalizzata veniva formattatta in un unica riga
+        */
+        $dom = new DOMDocument('1.0'); //nuovo DOMDocument() permette di creare, modificare, leggere e salvare file XML in modo strutturato con PHP 
+        $dom->preserveWhiteSpace = false; //quando il file viene caricato elimina gli spazi bianchi
+        $dom->formatOutput = true; //senza questo scrive tutto su una riga sola 
+        $dom->loadXML($xml->asXML()); //converte SimpleXMLElement in un una stringa XML che viene poi caricata come oggetto DOMDocument applicando le regole di formattazione precedenti
+                        
+        // Salvataggio nel file XML
+        if ($dom->save($xml_file)) {
             $messaggio_successo = "Richiesta crediti inviata con successo! L'amministratore la esaminerà presto.";
         } else {
             $errore = "Errore nell'invio della richiesta. Riprova più tardi.";

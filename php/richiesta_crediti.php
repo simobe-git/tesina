@@ -64,10 +64,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acquista_crediti'])) 
             $dom->formatOutput = true;
             $dom->loadXML($xml->asXML());
 
-            //salvataggio del file
-            $dom->save($xml_file);
-
-            $messaggio_successo = "Hai acquistato con successo {$offerta['crediti']} crediti!";
+            //salvataggio del file e set messaggio di successo
+            if($dom->save($xml_file)){
+                $messaggio_successo = "Hai acquistato con successo {$offerta['crediti']} crediti!";
+            } else {
+                $errore = "Si è verificato un errore durante l'acquisto dei crediti.";
+            }
         } else {
             $errore = "Si è verificato un errore durante l'acquisto dei crediti.";
         }
@@ -157,14 +159,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acquista_crediti'])) 
     
     <div class="container">
         <h1 style="text-align: center;">Richiedi Crediti</h1>
-        
-        <?php if (isset($messaggio_successo)): ?>
-            <div class="messaggio successo"><?php echo $messaggio_successo; ?></div>
-        <?php endif; ?>
-        
-        <?php if (isset($errore)): ?>
-            <div class="messaggio errore"><?php echo $errore; ?></div>
-        <?php endif; ?>
 
         <div class="offerte-grid">
             <?php foreach ($offerte_crediti as $indice => $offerta): ?>
@@ -178,6 +172,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acquista_crediti'])) 
                 </div>
             <?php endforeach; ?>
         </div>
+
+        <!--Controlla che il messaggio di sucesso sia impostato, se si riporta utente nel profilo altrimenti stampa errore-->
+        <?php if (isset($messaggio_successo)): ?>
+            <div class="messaggio successo"><?php echo $messaggio_successo; ?></div>
+            <a href="profilo.php" class="btn-acquista">Torna al profilo</a>
+        <?php elseif(isset($messaggio_successo)): ?>
+            <div class="messaggio errore"><?php echo $errore; ?></div>
+        <?php endif; ?>
+
+        
     </div>
 </body>
 </html>
