@@ -55,8 +55,7 @@ function caricaDiscussioni($id_gioco) {
 $discussioni = caricaDiscussioni($id_gioco);
 
 // calcola sconto e bonus
-$prezzo_base = $gioco['prezzo_attuale'];
-$sconto = calcolaSconto($_SESSION['username'] ?? null, $prezzo_base);
+$sconto = calcolaSconto($_SESSION['username'] ?? null, $gioco['prezzo_originale']);
 $bonus = getBonusDisponibili($id_gioco);
 
 // DEBUG
@@ -69,7 +68,7 @@ if (empty($bonus)) {
 <html lang="it">
 <head>
     <meta charset="UTF-8">
-    <title><?php echo htmlspecialchars($gioco['nome']); ?></title>
+    <title><?php echo htmlspecialchars($gioco['titolo']); ?></title>
     <link rel="stylesheet" href="../css/dettaglio.css">
     <link rel="stylesheet" href="../css/menu.css">
     <style>
@@ -201,16 +200,20 @@ if (empty($bonus)) {
                         <p><strong>Ambientazione:</strong> <?php echo htmlspecialchars($gioco['ambientazione']); ?></p>
                     </div>
                     
+                    <!-- Variazione di prezzo con sconto -->
                     <div class="prezzi-acquisto">
                         <?php if ($sconto['percentuale'] > 0): ?>
-                            <div class="prezzo-originale"><?php echo $prezzo_base; ?> crediti</div>
+                            <div class="prezzo-originale"><?php echo htmlspecialchars($gioco['prezzo_originale']); ?> crediti</div>
                             <div class="prezzo-scontato">
                                 <?php echo $sconto['prezzo_finale']; ?> crediti
                                 <span class="sconto-info">(-<?php echo $sconto['percentuale']; ?>%)</span>
                             </div>
                             <div class="sconto-motivo"><?php echo $sconto['motivo']; ?></div>
-                        <?php else: ?>
-                            <div class="prezzo"><?php echo $prezzo_base; ?> crediti</div>
+
+                        <!-- Gioco in offerta (mostriamo la variazione di prezzo)-->
+                        <?php elseif($gioco['prezzo_originale'] != $gioco['prezzo_attuale']): ?>
+                            <div class="prezzo-originale"><?php echo htmlspecialchars($gioco['prezzo_originale']); ?> crediti</div>
+                            <div class="prezzo-scontato"> <?php echo htmlspecialchars($gioco['prezzo_attuale']); ?> crediti</div>
                         <?php endif; ?>
                         
                         <?php if (!empty($bonus)): ?>
@@ -218,7 +221,7 @@ if (empty($bonus)) {
                                 <p class="bonus-titolo">Bonus all'acquisto:</p>
                                 <?php foreach ($bonus as $b): ?>
                                     <div class="bonus-badge">
-                                        <span class="bonus-ammontare">+<?php echo htmlspecialchars($b['ammontare']); ?>€ in crediti</span>
+                                        <span class="bonus-ammontare">+<?php echo htmlspecialchars($b['crediti_bonus']); ?>€ in crediti</span>
                                         <span class="bonus-date">
                                             (Valido dal <?php echo date('d/m/Y', strtotime($b['data_inizio'])); ?> 
                                             al <?php echo date('d/m/Y', strtotime($b['data_fine'])); ?>)
