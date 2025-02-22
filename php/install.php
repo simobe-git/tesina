@@ -64,7 +64,7 @@ if ($connessione->query($sql) === TRUE) {
 }
 
 // creazione tabella giochi (se non esiste già)
-$sql = "CREATE TABLE IF NOT EXISTS gioco_tavolo (
+$sql = "CREATE TABLE IF NOT EXISTS board_games (
     codice INT(5) NOT NULL PRIMARY KEY,
     titolo VARCHAR(50) NOT NULL, -- Nome 
     prezzo_originale DOUBLE(6,2) NOT NULL,
@@ -98,7 +98,7 @@ $sql = "CREATE TABLE IF NOT EXISTS recensioni (
     testo TEXT,
     data_recensione DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (username) REFERENCES utenti(username) ON DELETE CASCADE,
-    FOREIGN KEY (codice_gioco) REFERENCES gioco_tavolo(codice) ON DELETE CASCADE
+    FOREIGN KEY (codice_gioco) REFERENCES board_games(codice) ON DELETE CASCADE
 )";
 
 if ($connessione->query($sql) === TRUE) {
@@ -131,7 +131,7 @@ $sql = "CREATE TABLE IF NOT EXISTS bonus (
     codice_gioco INT(5),
     data_inizio DATE,
     data_fine DATE,
-    FOREIGN KEY (codice_gioco) REFERENCES gioco_tavolo(codice) ON DELETE CASCADE
+    FOREIGN KEY (codice_gioco) REFERENCES board_games(codice) ON DELETE CASCADE
 )";
 
 if ($connessione->query($sql) === TRUE) {
@@ -173,11 +173,14 @@ if ($connessione->query($sql) === TRUE) {
 // inserimento altri utenti (dopo gli inserimenti esistenti)
 $sql = "INSERT INTO utenti (nome, cognome, username, email, password, tipo_utente, crediti) VALUES 
     ('Marco', 'Neri', 'cliente2', 'marco@email.it', 'Cliente123!', 'cliente', 75.00),
+    ('Mario', 'Rossi', 'admin1', 'admin@gaming.it', 'Admin123!', 'admin', 0.00),
     ('Anna', 'Gialli', 'cliente3', 'anna@email.it', 'Cliente123!', 'cliente', 150.00),
-    ('Paolo', 'Viola', 'gestore2', 'paolo@gaming.it', 'Gestore123!', 'gestore', 0),
-    ('Laura', 'Rosa', 'admin2', 'laura@gaming.it', 'Admin123!', 'admin', 0),
-    ('Sofia', 'Azzurri', 'visitatore1', 'sofia@email.it', 'Visitatore123!', 'visitatore', 0),
-    ('Luca', 'Marroni', 'cliente4', 'luca@email.it', 'Cliente123!', 'cliente', 200.00)";
+    ('Paolo', 'Viola', 'gestore2', 'paolo@gaming.it', 'Gestore123!', 'gestore', 0.00),
+    ('Laura', 'Rosa', 'admin2', 'laura@gaming.it', 'Admin123!', 'admin', 0.00),
+    ('Sofia', 'Azzurri', 'visitatore1', 'sofia@email.it', 'Visitatore123!', 'visitatore', 0.00),
+    ('Luca', 'Marroni', 'cliente4', 'luca@email.it', 'Cliente123!', 'cliente', 200.00),
+    ('Giuseppe', 'Bianchi', 'cliente1', 'giuseppe@email.it', 'Cliente123!', 'cliente', 100.50),
+    ('Luigi', 'Verdi', 'gestore1', 'gestore@gaming.it', 'Gestore123!', 'gestore', 0.00)";
 
 if ($connessione->query($sql) === TRUE) {
     echo "Utenti inseriti con successo<br>";
@@ -186,21 +189,22 @@ if ($connessione->query($sql) === TRUE) {
 }
 
 // popolamento tabella giochi
-$sql = "INSERT IGNORE INTO gioco_tavolo (codice, titolo, prezzo_originale, prezzo_attuale, disponibile, categoria, min_num_giocatori, max_num_giocatori, min_eta, avg_partita, data_rilascio, nome_editore, autore, descrizione, meccaniche, ambientazione, immagine) VALUES
-    (1, 'Brass Birmingham', 105.00, 40.00, 1, 'Strategia', 2, 4, '14+', '90', '2018-01-01', 'Roxley', 'N/A', 'Brass: Birmingham è il seguito del gioco di strategia economica Brass, capolavoro di Martin Wallace del 2007. Brass: Birmingham racconta la storia di imprenditori in competizione tra loro a Birmingham durante la rivoluzione industriale tra il 1770 e il 1870.', 'Raccolta risorse,Scelte strategiche', 'Storico', 'https://cf.geekdo-images.com/UIlFaaTmaWms7F5xdEFgGA__imagepage/img/SitcV7akzI3P_dl8pPEneEpM-U4=/fit-in/900x600/filters:no_upscale():strip_icc()/pic3549793.jpg'),
-    (2, 'Monopoly', 30.00, 20.00, 1, 'Sociale', 2, 6, '8+', '210', '1935-01-01', 'Hasbro', 'Elizabeth Magie', 'I giocatori assumono il ruolo di proprietari di terreni, cercando di acquistarli e poi di svilupparli', 'meccaniche', 'Realistica', 'https://cf.geekdo-images.com/uyuTD45L9R99vEGF0RTLUQ__imagepage/img/tc-UrchQhoi2k_5wb51l22iW40k=/fit-in/900x600/filters:no_upscale():strip_icc()/pic5872489.jpg'),
-    (3, 'Indovina Chi?', 30.00, 20.00, 1, 'Deduzione', 2, 2, '6+', '20', '1980-01-01', 'Hasbro/Milton Bradley', 'Theo e Ora Coster', 'bello', 'meccaniche', 'Realistica', 'https://cf.geekdo-images.com/9IzIcHIJVY08OYkXpTmUQA__imagepage/img/JlSpAr2_5CGK58yA7tUwgmRDQaU=/fit-in/900x600/filters:no_upscale():strip_icc()/pic335812.jpg'),
-    (4, 'Jenga', 35.00, 25.00, 1, 'Costruzioni', 1, 8, '6+', '15', '2018-01-01', 'Hasbro', 'Leslie Scott', 'Non farla cadere!', 'Inserimento blocchetti', 'Realistica', 'https://cf.geekdo-images.com/KOb8nKGW63o2cCvno0H5Ug__imagepage/img/x5k6swUJbXXBW3rzqFnlOkAyNHk=/fit-in/900x600/filters:no_upscale():strip_icc()/pic4943939.jpg'),
-    (5, 'Catan', 45.00, 35.00, 1, 'Gestionale', 3, 4, '10+', '90', '1995-01-01', 'Kosmos', 'Klaus Teuber', 'Colleziona risorse e costruisci il tuo impero!', 'meccaniche', 'Storico', 'https://cf.geekdo-images.com/yGOeKCQpS82s_F-Kr2FxoQ__imagepage/img/Xtt53sTINWlkLMmyiK7Ghm8gkIw=/fit-in/900x600/filters:no_upscale():strip_icc()/pic8632669.png'),  
-    (6, 'Carcassonne', 40.00, 30.00, 1, 'Piazzamento tessere', 2, 5, '7+', '35', '2000-01-01', 'Hans im Glück', 'Klaus-Jürgen Wrede', 'Costruisci città e conquista territori.', 'meccaniche', 'Storico', 'https://cf.geekdo-images.com/1fms22NWt70hxrZ_Tzi__g__imagepage/img/-rWJ_2NwimLYKwmMXV2YF4u4BX8=/fit-in/900x600/filters:no_upscale():strip_icc()/pic6798990.jpg'),  
-    (7, 'Dixit', 35.00, 28.00, 1, 'Narrazione', 3, 6, '8+', '30', '2008-01-01', 'Libellud', 'Jean-Louis Roubira', 'Un gioco di immaginazione e creatività.', 'meccaniche', 'Fantasy', 'https://cf.geekdo-images.com/8IvM-OjUsfk-oIUleEMxsw__imagepage/img/NguyJsXLR_MQbUs11BSnKjaW1vM=/fit-in/900x600/filters:no_upscale():strip_icc()/pic7145146.jpg'),  
-    (8, 'Risiko!', 50.00, 40.00, 1, 'Strategia', 2, 6, '10+', '120', '1968-01-01', 'Hasbro', 'Albert Lamorisse', 'Conquista il mondo con la tua strategia!', 'meccaniche', 'Distopica', 'https://cf.geekdo-images.com/bWkEcY1KeFwyTMmT3ka9GA__imagepage/img/j1IxmVM-lcY06qozTZdngIE6pqw=/fit-in/900x600/filters:no_upscale():strip_icc()/pic5726714.png'),  
-    (9, 'Cluedo', 30.00, 22.00, 1, 'Investigazione', 2, 6, '8+', '45', '1949-01-01', 'Hasbro', 'Anthony Pratt', 'Scopri chi è l\'assassino e con quale arma.', 'meccaniche', 'Fantascienza', 'https://cf.geekdo-images.com/YJHF5PpGcaA5xydP7Ct-ww__imagepage/img/fMA4QzYY0L5NZxFnCNDIB3htzAQ=/fit-in/900x600/filters:no_upscale():strip_icc()/pic7623116.jpg'),  
-    (10, 'Scotland Yard', 35.00, 27.00, 1, 'Investigazione', 2, 6, '10+', '45', '1983-01-01', 'Ravensburger', 'Werner Schlegel', 'Cattura il misterioso Mister X per vincere.', 'meccaniche', 'Realistica', 'https://cf.geekdo-images.com/tVTwaRU6Y6Cv1qei2dbdbQ__imagepage/img/Uo-9Kb_CWShYmJX7_G4nepc3nNU=/fit-in/900x600/filters:no_upscale():strip_icc()/pic8377407.jpg'),  
-    (11, 'Azul', 40.00, 32.00, 1, 'Astratto', 2, 4, '8+', '40', '2018-01-01', 'Plan B Games', 'Michael Kiesling', 'Crea il miglior mosaico con le tessere.', 'meccaniche', 'Fantasy', 'https://cf.geekdo-images.com/wcYNm1g5mtv6LNZGok_PZw__imagepage/img/FnP3L9NORETfE3xlv9n8otUjlek=/fit-in/900x600/filters:no_upscale():strip_icc()/pic8491761.png')";
+$sql = "INSERT IGNORE INTO board_games (codice, titolo, prezzo_originale, prezzo_attuale, disponibile, categoria, min_num_giocatori, max_num_giocatori, min_eta, avg_partita, data_rilascio, nome_editore, autore, descrizione, meccaniche, ambientazione, immagine) VALUES
+    (1, 'Brass Birmingham', 105.00, 40.00, 1, 'Strategia', 2, 4, '14+', '90', 2018, 'Roxley', 'N/A', 'Brass: Birmingham è il seguito del gioco di strategia economica Brass, capolavoro di Martin Wallace del 2007. Brass: Birmingham racconta la storia di imprenditori in competizione tra loro a Birmingham durante la rivoluzione industriale tra il 1770 e il 1870.', 'Raccolta risorse,Scelte strategiche', 'Storico', 'https://cf.geekdo-images.com/UIlFaaTmaWms7F5xdEFgGA__imagepage/img/SitcV7akzI3P_dl8pPEneEpM-U4=/fit-in/900x600/filters:no_upscale():strip_icc()/pic3549793.jpg'),
+    (2, 'Monopoly', 30.00, 20.00, 1, 'Sociale', 2, 6, '8+', '210', 1935, 'Hasbro', 'Elizabeth Magie', 'bello', 'Lancio di dadi, movimento di pedine', 'Storico', 'https://logowik.com/content/uploads/images/monopoly512.logowik.com.webp'),
+    (3,'Indovina Chi?', 30.00, 20.00, 1, 'Deduzione', 2, 2, '6+', '20', 1980, 'Hasbro/Milton Bradley', 'Theo e Ora Coster', 'bello', 'Scelta figurine', 'Storico', 'https://hasbrocommunity.it/images/logos/300x300/indovina_chi.jpg?v=1'),
+    (4,'Jenga', 35.00, 25.00, 1, 'Costruzioni', 1, 8, '6+', '15', 2018, 'Hasbro', 'Leslie Scott', 'Non farla cadere!', 'Inserimento blocchetti', 'Storico', 'https://logowik.com/content/uploads/images/jenga5734.logowik.com.webp')
+    (5, 'Catan', 45.00, 35.00, 1, 'Gestionale', 3, 4, '10+', '90', 1995, 'Kosmos', 'Klaus Teuber', 'Colleziona risorse e costruisci il tuo impero!', 'meccaniche', 'ambientazione', 'https://logowik.com/content/uploads/images/catan.jpg'),  
+    (6, 'Carcassonne', 40.00, 30.00, 1, 'Piazzamento tessere', 2, 5, '7+', '35', 2000, 'Hans im Glück', 'Klaus-Jürgen Wrede', 'Costruisci città e conquista territori.', 'meccaniche', 'ambientazione', 'https://logowik.com/content/uploads/images/carcassonne.jpg'),  
+    (7, 'Dixit', 35.00, 28.00, 1, 'Narrazione', 3, 6, '8+', '30', 2008, 'Libellud', 'Jean-Louis Roubira', 'Un gioco di immaginazione e creatività.', 'meccaniche', 'ambientazione' 'https://logowik.com/content/uploads/images/dixit.jpg'),  
+    (8, 'Risiko!', 50.00, 40.00, 1, 'Strategia', 2, 6, '10+', '120', 1968, 'Hasbro', 'Albert Lamorisse', 'Conquista il mondo con la tua strategia!', 'meccaniche', 'ambientazione', 'https://logowik.com/content/uploads/images/risiko.jpg'),  
+    (9, 'Cluedo', 30.00, 22.00, 1, 'Investigazione', 2, 6, '8+', '45', 1949, 'Hasbro', 'Anthony Pratt', 'Scopri chi è l\'assassino e con quale arma.', 'meccaniche', 'ambientazione', 'https://logowik.com/content/uploads/images/cluedo.jpg'),  
+    (10, 'Scotland Yard', 35.00, 27.00, 1, 'Investigazione', 2, 6, '10+', '45', 1983, 'Ravensburger', 'Werner Schlegel', 'Cattura il misterioso Mister X per vincere.', 'meccaniche', ambientazione', 'https://logowik.com/content/uploads/images/scotlandyard.jpg'),  
+    (11, 'Azul', 40.00, 32.00,, 1, 'Astratto', 2, 4, '8+', '40', 2018, 'Plan B Games', 'Michael Kiesling', 'Crea il miglior mosaico con le tessere.', 'meccaniche', 'ambientazione', 'https://cf.geekdo-images.com/wcYNm1g5mtv6LNZGok_PZw__imagepage/img/FnP3L9NORETfE3xlv9n8otUjlek=/fit-in/900x600/filters:no_upscale():strip_icc()/pic8491761.png'),  
+    ";
 
 if ($connessione->query($sql) === TRUE) {
-    echo "Dati inseriti nella tabella gioco_tavolo<br>";
+    echo "Dati inseriti nella tabella board_games<br>";
 }
 
 // popolamento tabella recensioni
