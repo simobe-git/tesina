@@ -71,7 +71,7 @@ $stmt->bind_param("s", $_SESSION['username']);
 $stmt->execute();
 $crediti_attuali = $stmt->get_result()->fetch_assoc()['crediti'];
 
-// recupera le richieste dal file XML
+// recupera le richieste crediti dal file XML
 $richieste_array = [];
 if (file_exists($xml_file)) {
     $xml = simplexml_load_file($xml_file);

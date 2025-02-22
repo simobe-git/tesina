@@ -43,7 +43,7 @@
     <username>cliente3</username>
     <crediti>333</crediti>
     <data>2025-02-21</data>
-    <status>in attesa</status>
+    <status>approvata</status>
   </richiesta>
   <richiesta>
     <username>cliente3</username>

@@ -24,6 +24,14 @@ if(isset($_POST['login']) && $_SERVER["REQUEST_METHOD"] === "POST"){
 
         foreach ($utenti->utente as $utente) {
             if ((string)$utente->username === $username) {
+
+                if ((string)$utente->ruolo === 'bannato') { //controllo se utente che accede è bannato
+                    $motivo_ban = (string)$utente->motivo_ban; //motivo del ban
+                    header("Location: login.php?error=banned&motivo=" . $motivo_ban);    //usiamo la funzione urlencode per codificare il motivo del ban 
+                                                                                                    //in modo che possa essere passato come parametro dell URL
+                    exit();
+                }
+
                 $_SESSION['ruolo'] = (string)$utente->ruolo;
                 $ruolo_trovato = true;
                 break;
@@ -44,7 +52,7 @@ if(isset($_POST['login']) && $_SERVER["REQUEST_METHOD"] === "POST"){
         } else {
             // reindirizzamento in base al ruolo
             if ($_SESSION['ruolo'] === 'admin') {
-                header("Location: admin_dashboard.php");
+                header('Location: admin_dashboard.php');
             } else {
                 header("Location: home.php");
             }
