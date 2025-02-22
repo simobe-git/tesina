@@ -37,14 +37,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         // aggiungi al carrello nella sessione in corso
         $_SESSION['carrello'][] = $_POST['codice_gioco'];
         $_SESSION['carrello'] = array_unique($_SESSION['carrello']); // evitiamo duplicati
+
     } elseif (isset($_POST['rimuovi']) && isset($_POST['codice_gioco'])) {
+
         // rimuovi dal carrello nella sessione in corso
         $key = array_search($_POST['codice_gioco'], $_SESSION['carrello']);
         if ($key !== false) {
             unset($_SESSION['carrello'][$key]);
         }
+        
     } elseif (isset($_POST['acquista'])) {
-        // recuperiam il numero di crediti dell'utente
+
+        // recuperiamo il numero di crediti dell'utente
         $query_crediti = "SELECT crediti FROM utenti WHERE username = ?";
         $stmt = $connessione->prepare($query_crediti);
         $stmt->bind_param("s", $_SESSION['username']);
@@ -99,7 +103,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     $acquisto->addAttribute('id', uniqid());
                     $acquisto->addChild('username', $_SESSION['username']);
                     $acquisto->addChild('codice_gioco', $codice_gioco);
-                    $acquisto->addChild('prezzo_originale', $gioco['prezzo_attuale']);
+                    $acquisto->addChild('prezzo_originale', $gioco['prezzo_originale']);
                     $acquisto->addChild('prezzo_pagato', $prezzo_scontato);
                     $acquisto->addChild('sconto_applicato', $sconto['percentuale']);
                     $acquisto->addChild('bonus_ottenuti', $bonus['ammontare'] ?? 0);

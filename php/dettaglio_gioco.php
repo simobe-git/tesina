@@ -163,6 +163,15 @@ if (empty($bonus)) {
         .btn-login:hover {
             background: linear-gradient(45deg, #7B1FA2, #6A1B9A);
         }
+
+        .gioco-immagine {
+            width: 100%;
+            max-width: 300px;
+            height: 300px;
+            object-fit: cover;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
     </style>
 </head>
 <body>
@@ -173,8 +182,7 @@ if (empty($bonus)) {
             <h1 class="titolo-gioco"><?php echo htmlspecialchars($gioco['titolo']); ?></h1>
             
             <div class="gioco-content">
-                <img class="gioco-immagine" src="<?php echo htmlspecialchars($gioco['immagine']); ?>" 
-                     alt="<?php echo htmlspecialchars($gioco['titolo']); ?>">
+                <img class="gioco-immagine" src="<?php echo htmlspecialchars($gioco['immagine']); ?>" alt="<?php echo htmlspecialchars($gioco['titolo']); ?>">
                 
                 <div class="gioco-info">
                     <p class="descrizione"><?php echo htmlspecialchars($gioco['descrizione']); ?></p>

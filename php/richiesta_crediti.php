@@ -57,8 +57,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['acquista_crediti'])) 
             $richiesta->addChild('data', date('Y-m-d'));
             $richiesta->addChild('status', 'approvata');
             $richiesta->addChild('prezzo', $offerta['prezzo']);
-            $xml->asXML($xml_file);
-            
+
+            // Formattazione con DOMDocument (spiegazione dettagliata file carrello.php)
+            $dom = new DOMDocument('1.0');
+            $dom->preserveWhiteSpace = false;
+            $dom->formatOutput = true;
+            $dom->loadXML($xml->asXML());
+
+            //salvataggio del file
+            $dom->save($xml_file);
+
             $messaggio_successo = "Hai acquistato con successo {$offerta['crediti']} crediti!";
         } else {
             $errore = "Si è verificato un errore durante l'acquisto dei crediti.";

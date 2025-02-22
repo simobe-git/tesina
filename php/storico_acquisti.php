@@ -15,12 +15,12 @@ if (!isset($_SESSION['username'])) {
 
 // aggiungiamo la funzione formattaData
 function formattaData($data) {
-    return date('d/m/Y H:i', strtotime($data));
+    return date('d/m/Y', strtotime($data));
 }
 
 // funzione per ottenere i dettagli di un gioco
 function getDettagliGioco($connessione, $codice_gioco) {
-    $query = "SELECT nome, genere, nome_editore FROM videogiochi WHERE codice = ?";
+    $query = "SELECT titolo, categoria, nome_editore FROM gioco_tavolo WHERE codice = ?";
     $stmt = $connessione->prepare($query);
     $stmt->bind_param("i", $codice_gioco);
     $stmt->execute();
@@ -48,15 +48,16 @@ if (file_exists($xml_file)) {
             if ((string)$acquisto->username === $_SESSION['username']) {
                 $dettagli_gioco = getDettagliGioco($connessione, (int)$acquisto->codice_gioco);
                 if ($dettagli_gioco) {
-                    error_log("Aggiunto acquisto per gioco: " . $dettagli_gioco['nome']);
+                    error_log("Aggiunto acquisto per gioco: " . $dettagli_gioco['titolo']);
                     $acquisti[] = [
                         'id' => (string)$acquisto['id'],
-                        'gioco' => $dettagli_gioco['nome'],
-                        'genere' => $dettagli_gioco['genere'],
+                        'gioco' => $dettagli_gioco['titolo'],
+                        'categoria' => $dettagli_gioco['categoria'],
                         'editore' => $dettagli_gioco['nome_editore'],
                         'prezzo_originale' => (float)$acquisto->prezzo_originale,
                         'prezzo_pagato' => (float)$acquisto->prezzo_pagato,
                         'sconto' => isset($acquisto->sconto_applicato) ? (float)$acquisto->sconto_applicato : 0,
+                        'bonus' => isset($acquisto->bonus_ottenuti) ? (int)$acquisto->bonus_ottenuti : 0,
                         'data' => (string)$acquisto->data
                     ];
                 } else {
@@ -86,6 +87,8 @@ $totale_bonus = array_sum(array_column($acquisti, 'bonus'));
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Storico Acquisti - GameShop</title>
     <link rel="stylesheet" href="../css/home.css">
+    <link rel="stylesheet" href="../css/menu.css">
+
     <style>
         .container {
             max-width: 1000px;
@@ -144,16 +147,6 @@ $totale_bonus = array_sum(array_column($acquisti, 'bonus'));
             border-radius: 12px;
             font-size: 0.9em;
         }
-        .filtri {
-            margin-bottom: 20px;
-            padding: 15px;
-            background: #f8f9fa;
-            border-radius: 8px;
-        }
-        .filtri select {
-            padding: 5px;
-            margin-right: 10px;
-        }
         .no-acquisti {
             text-align: center;
             padding: 40px;
@@ -164,36 +157,28 @@ $totale_bonus = array_sum(array_column($acquisti, 'bonus'));
         .container {
             margin-top: 100px;
         }
+        .filtri {
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .filtri label {
+            margin-right: 10px;
+            font-weight: bold;
+        }
+        .filtri input {
+            padding: 5px;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+        }
     </style>
 </head>
 <body>
-    <nav class="navbar">
-        <div class="logo">
-            <a href="#">GameShop</a>
-        </div>
-        <ul class="nav-links">
-            <li><a href="catalogo.php">Catalogo</a></li>
-            <li><a href="offerte.php">Offerte</a></li>
-            <li><a href="faq.php">FAQ</a></li>
-            <?php if(isset($_SESSION['statoLogin'])) : ?>
-                <li><a href="logout.php">Logout</a></li>
-            <?php else: ?>
-                <li><a href="login.php">Login</a></li>
-            <?php endif; ?>
-            <?php if(isset($_SESSION['ruolo'])){ 
-                if($_SESSION['ruolo'] === 'cliente'):   ?>
-                <li><a href="carrello.php">Carrello</a></li>
-                <li><a href="profilo.php">Profilo</a></li>
-            <?php elseif ($_SESSION['ruolo'] === 'admin'):  ?>
-                <li><a href="admin_dashboard.php">Dashboard</a></li>
-            <?php endif; } ?>
-        </ul>
-        <div class="hamburger-menu">
-            <span></span>
-            <span></span>
-            <span></span>
-        </div>
-    </nav>
+    <?php include('menu.php'); ?>
 
     <div class="container">
         <h1>Storico Acquisti</h1>
@@ -217,30 +202,19 @@ $totale_bonus = array_sum(array_column($acquisti, 'bonus'));
             </div>
         </div>
 
+        <!-- Filtri sulla tabella-->
+        <div class="filtri">
+            <label for="filtro-gioco">Gioco:</label>
+            <input type="text" id="filtro-gioco" placeholder="Cerca gioco...">
+            <label for="filtro-categoria">Categoria:</label>
+            <input type="text" id="filtro-categoria" placeholder="Cerca categoria...">
+            <label for="filtro-editore">Editore:</label>
+            <input type="text" id="filtro-editore" placeholder="Cerca editore...">
+        </div>
+
         <?php if (!empty($acquisti)): ?>
-            <div class="filtri">
-                <label>Filtra per genere:</label>
-                <select id="filtroGenere">
-                    <option value="">Tutti</option>
-                    <?php 
-                    $generi = array_unique(array_column($acquisti, 'genere'));
-                    foreach ($generi as $genere): 
-                    ?>
-                        <option value="<?php echo htmlspecialchars($genere); ?>">
-                            <?php echo htmlspecialchars($genere); ?>
-                        </option>
-                    <?php endforeach; ?>
-                </select>
-
-                <label>Ordina per:</label>
-                <select id="ordinamento">
-                    <option value="data">Data</option>
-                    <option value="prezzo">Prezzo</option>
-                    <option value="nome">Nome gioco</option>
-                </select>
-            </div>
-
-            <table class="acquisti-tabella">
+            <!--Tabella mostra tutti gli acquisti-->
+            <table class="acquisti-tabella" id="acquisti-tabella">
                 <thead>
                     <tr>
                         <th>Data</th>
@@ -257,20 +231,27 @@ $totale_bonus = array_sum(array_column($acquisti, 'bonus'));
                         <tr>
                             <td><?php echo formattaData($acquisto['data']); ?></td>
                             <td><?php echo htmlspecialchars($acquisto['gioco']); ?></td>
-                            <td><?php echo htmlspecialchars($acquisto['genere']); ?></td>
+                            <td><?php echo htmlspecialchars($acquisto['categoria']); ?></td>
                             <td><?php echo htmlspecialchars($acquisto['editore']); ?></td>
-                            <td>€<?php echo number_format($acquisto['prezzo_originale'], 2); ?></td>
-                            <td>€<?php echo number_format($acquisto['prezzo_pagato'], 2); ?></td>
+                            <td><?php echo number_format($acquisto['prezzo_originale'], 2); ?></td>
+                            <td><?php echo number_format($acquisto['prezzo_pagato'], 2); ?></td>
                             <td>
+                                <!-- Mostra se si ha o meno uno sconto -->
                                 <?php if ($acquisto['sconto'] > 0): ?>
                                     <span class="sconto-badge">
                                         -<?php echo $acquisto['sconto']; ?>%
                                     </span>
+                                <?php else: ?>
+                                    <p>Nessuno sconto applicato</p>
                                 <?php endif; ?>
+
+                                <!-- Mostra se si ha o meno un bonus -->
                                 <?php if ($acquisto['bonus'] > 0): ?>
                                     <span class="bonus-badge">
-                                        +<?php echo $acquisto['bonus']; ?> crediti
+                                        +<?php echo $acquisto['bonus']; ?> crediti <!--Per ogni bonus si ricevono dei credti-->
                                     </span>
+                                <?php else: ?>
+                                    <p>Nessun bonus</p>
                                 <?php endif; ?>
                             </td>
                         </tr>
@@ -293,14 +274,34 @@ $totale_bonus = array_sum(array_column($acquisti, 'bonus'));
             navLinks.classList.toggle('active');
         });
 
-        // funzioni per il filtraggio e l'ordinamento
-        document.getElementById('filtroGenere').addEventListener('change', function() {
-            //IMPLEMENTARE IL FILTRAGGIO PER GENERE
-        });
+        // Filtri di ricerca
+        const filtroGioco = document.getElementById('filtro-gioco');
+        const filtroCategoria = document.getElementById('filtro-categoria');
+        const filtroEditore = document.getElementById('filtro-editore');
+        const tabellaAcquisti = document.getElementById('acquisti-tabella').getElementsByTagName('tbody')[0];
 
-        document.getElementById('ordinamento').addEventListener('change', function() {
-            //IMPLEMENTARE L'ORDINAMENTO
-        });
+        function filtraTabella() {
+            const gioco = filtroGioco.value.toLowerCase();
+            const categoria = filtroCategoria.value.toLowerCase();
+            const editore = filtroEditore.value.toLowerCase();
+
+            for (let row of tabellaAcquisti.rows) {
+                const giocoCell = row.cells[1].textContent.toLowerCase();
+                const categoriaCell = row.cells[2].textContent.toLowerCase();
+                const editoreCell = row.cells[3].textContent.toLowerCase();
+
+                if (giocoCell.includes(gioco) && categoriaCell.includes(categoria) && editoreCell.includes(editore)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            }
+        }
+
+        filtroGioco.addEventListener('input', filtraTabella);
+        filtroCategoria.addEventListener('input', filtraTabella);
+        filtroEditore.addEventListener('input', filtraTabella);
     </script>
+
 </body>
 </html>
