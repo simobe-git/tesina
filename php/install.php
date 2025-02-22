@@ -66,7 +66,7 @@ if ($connessione->query($sql) === TRUE) {
 // creazione tabella giochi (se non esiste già)
 $sql = "CREATE TABLE IF NOT EXISTS gioco_tavolo (
     codice INT(5) NOT NULL PRIMARY KEY,
-    titolo VARCHAR(50) NOT NULL, -- Nome 
+    titolo VARCHAR(50) NOT NULL,  
     prezzo_originale DOUBLE(6,2) NOT NULL,
     prezzo_attuale DOUBLE(6,2) NOT NULL,
     disponibile BIT NOT NULL, -- (0 = non disponibile, 1 = disponibile, NULL = non specificato)
@@ -79,8 +79,8 @@ $sql = "CREATE TABLE IF NOT EXISTS gioco_tavolo (
     nome_editore VARCHAR(30) NOT NULL,
     autore VARCHAR(100) NOT NULL, -- N/A specifica non disponibile
     descrizione TEXT,
-    meccaniche SET('Movimento','Combattimento','Raccolta risorse','Scelte strategiche','Interazione tra giocatori') NOT NULL, -- SET assegna più di un valore
-    ambientazione ENUM('Fantasy', 'Storico', 'Fantascienza', 'Distopica', 'Realistica') NOT NULL, -- Valori di default da poter scegliere (sono quelli dati da temperini)
+    meccaniche SET('Movimento','Combattimento','Raccolta risorse','Scelte strategiche','Interazione tra giocatori','Lancio di dadi','Movimento di pedine') NOT NULL, -- SET assegna più di un valore
+    ambientazione ENUM('Fantasy', 'Storico', 'Fantascienza', 'Distopica', 'Realistica') NOT NULL, -- Valori di default da poter scegliere
     immagine VARCHAR(255) -- imamgine delle componenti o logo  
 )";
 
@@ -140,35 +140,6 @@ if ($connessione->query($sql) === TRUE) {
     echo "Errore nella creazione della tabella bonus: " . $connessione->error . "<br>";
 }
 
-// inserimento admin
-$sql = "INSERT INTO utenti (nome, cognome, username, email, password, tipo_utente, crediti) 
-        VALUES ('Mario', 'Rossi', 'admin1', 'admin@gaming.it', 'Admin123!', 'admin', 0)";
-
-if ($connessione->query($sql) === TRUE) {
-    echo "Admin inserito con successo<br>";
-} else {
-    echo "Errore nell'inserimento admin: " . $connessione->error . "<br>";
-}
-
-// inserimento gestore
-$sql = "INSERT INTO utenti (nome, cognome, username, email, password, tipo_utente, crediti) 
-        VALUES ('Luigi', 'Verdi', 'gestore1', 'gestore@gaming.it', 'Gestore123!', 'gestore', 0)";
-
-if ($connessione->query($sql) === TRUE) {
-    echo "Gestore inserito con successo<br>";
-} else {
-    echo "Errore nell'inserimento gestore: " . $connessione->error . "<br>";
-}
-
-// inserimento cliente1
-$sql = "INSERT INTO utenti (nome, cognome, username, email, password, tipo_utente, crediti) 
-        VALUES ('Giuseppe', 'Bianchi', 'cliente1', 'giuseppe@email.it', 'Cliente123!', 'cliente', 100.50)";
-
-if ($connessione->query($sql) === TRUE) {
-    echo "Cliente1 inserito con successo<br>";
-} else {
-    echo "Errore nell'inserimento cliente1: " . $connessione->error . "<br>";
-}
 
 // inserimento altri utenti (dopo gli inserimenti esistenti)
 $sql = "INSERT INTO utenti (nome, cognome, username, email, password, tipo_utente, crediti) VALUES 
@@ -188,20 +159,19 @@ if ($connessione->query($sql) === TRUE) {
     echo "Errore nell'inserimento degli utenti: " . $connessione->error . "<br>";
 }
 
-// popolamento tabella giochi
+// popolamento tabella giochi_tavolo
 $sql = "INSERT IGNORE INTO gioco_tavolo (codice, titolo, prezzo_originale, prezzo_attuale, disponibile, categoria, min_num_giocatori, max_num_giocatori, min_eta, avg_partita, data_rilascio, nome_editore, autore, descrizione, meccaniche, ambientazione, immagine) VALUES
     (1, 'Brass Birmingham', 105.00, 40.00, 1, 'Strategia', 2, 4, '14+', '90', 2018, 'Roxley', 'N/A', 'Brass: Birmingham è il seguito del gioco di strategia economica Brass, capolavoro di Martin Wallace del 2007. Brass: Birmingham racconta la storia di imprenditori in competizione tra loro a Birmingham durante la rivoluzione industriale tra il 1770 e il 1870.', 'Raccolta risorse,Scelte strategiche', 'Storico', 'https://cf.geekdo-images.com/UIlFaaTmaWms7F5xdEFgGA__imagepage/img/SitcV7akzI3P_dl8pPEneEpM-U4=/fit-in/900x600/filters:no_upscale():strip_icc()/pic3549793.jpg'),
-    (2, 'Monopoly', 30.00, 20.00, 1, 'Sociale', 2, 6, '8+', '210', 1935, 'Hasbro', 'Elizabeth Magie', 'bello', 'Lancio di dadi, movimento di pedine', 'Storico', 'https://logowik.com/content/uploads/images/monopoly512.logowik.com.webp'),
-    (3,'Indovina Chi?', 30.00, 20.00, 1, 'Deduzione', 2, 2, '6+', '20', 1980, 'Hasbro/Milton Bradley', 'Theo e Ora Coster', 'bello', 'Scelta figurine', 'Storico', 'https://hasbrocommunity.it/images/logos/300x300/indovina_chi.jpg?v=1'),
-    (4,'Jenga', 35.00, 25.00, 1, 'Costruzioni', 1, 8, '6+', '15', 2018, 'Hasbro', 'Leslie Scott', 'Non farla cadere!', 'Inserimento blocchetti', 'Storico', 'https://logowik.com/content/uploads/images/jenga5734.logowik.com.webp')
-    (5, 'Catan', 45.00, 35.00, 1, 'Gestionale', 3, 4, '10+', '90', 1995, 'Kosmos', 'Klaus Teuber', 'Colleziona risorse e costruisci il tuo impero!', 'meccaniche', 'ambientazione', 'https://logowik.com/content/uploads/images/catan.jpg'),  
-    (6, 'Carcassonne', 40.00, 30.00, 1, 'Piazzamento tessere', 2, 5, '7+', '35', 2000, 'Hans im Glück', 'Klaus-Jürgen Wrede', 'Costruisci città e conquista territori.', 'meccaniche', 'ambientazione', 'https://logowik.com/content/uploads/images/carcassonne.jpg'),  
-    (7, 'Dixit', 35.00, 28.00, 1, 'Narrazione', 3, 6, '8+', '30', 2008, 'Libellud', 'Jean-Louis Roubira', 'Un gioco di immaginazione e creatività.', 'meccaniche', 'ambientazione' 'https://logowik.com/content/uploads/images/dixit.jpg'),  
-    (8, 'Risiko!', 50.00, 40.00, 1, 'Strategia', 2, 6, '10+', '120', 1968, 'Hasbro', 'Albert Lamorisse', 'Conquista il mondo con la tua strategia!', 'meccaniche', 'ambientazione', 'https://logowik.com/content/uploads/images/risiko.jpg'),  
-    (9, 'Cluedo', 30.00, 22.00, 1, 'Investigazione', 2, 6, '8+', '45', 1949, 'Hasbro', 'Anthony Pratt', 'Scopri chi è l\'assassino e con quale arma.', 'meccaniche', 'ambientazione', 'https://logowik.com/content/uploads/images/cluedo.jpg'),  
-    (10, 'Scotland Yard', 35.00, 27.00, 1, 'Investigazione', 2, 6, '10+', '45', 1983, 'Ravensburger', 'Werner Schlegel', 'Cattura il misterioso Mister X per vincere.', 'meccaniche', ambientazione', 'https://logowik.com/content/uploads/images/scotlandyard.jpg'),  
-    (11, 'Azul', 40.00, 32.00,, 1, 'Astratto', 2, 4, '8+', '40', 2018, 'Plan B Games', 'Michael Kiesling', 'Crea il miglior mosaico con le tessere.', 'meccaniche', 'ambientazione', 'https://cf.geekdo-images.com/wcYNm1g5mtv6LNZGok_PZw__imagepage/img/FnP3L9NORETfE3xlv9n8otUjlek=/fit-in/900x600/filters:no_upscale():strip_icc()/pic8491761.png'),  
-    ";
+    (2, 'Monopoly', 30.00, 20.00, 1, 'Sociale', 2, 6, '8+', '210', 1935, 'Hasbro', 'Elizabeth Magie', 'bello', 'Lancio di dadi,Movimento di pedine', 'Storico', 'https://logowik.com/content/uploads/images/monopoly512.logowik.com.webp'),
+    (3,'Indovina Chi?', 30.00, 20.00, 1, 'Deduzione', 2, 2, '6+', '20', 1980, 'Hasbro/Milton Bradley', 'Theo e Ora Coster', 'bello', 'Scelte strategiche', 'Storico', 'https://hasbrocommunity.it/images/logos/300x300/indovina_chi.jpg?v=1'),
+    (4,'Jenga', 35.00, 25.00, 1, 'Costruzioni', 1, 8, '6+', '15', 2018, 'Hasbro', 'Leslie Scott', 'Non farla cadere!', 'Scelte strategiche', 'Storico', 'https://logowik.com/content/uploads/images/jenga5734.logowik.com.webp'),
+    (5, 'Catan', 45.00, 35.00, 1, 'Gestionale', 3, 4, '10+', '90', 1995, 'Kosmos', 'Klaus Teuber', 'Colleziona risorse e costruisci il tuo impero!', 'Raccolta risorse', 'Storico', 'https://logowik.com/content/uploads/images/catan.jpg'),  
+    (6, 'Carcassonne', 40.00, 30.00, 1, 'Piazzamento tessere', 2, 5, '7+', '35', 2000, 'Hans im Glück', 'Klaus-Jürgen Wrede', 'Costruisci città e conquista territori.', 'Raccolta risorse,Scelte strategiche', 'Storico', 'https://logowik.com/content/uploads/images/carcassonne.jpg'),  
+    (7, 'Dixit', 35.00, 28.00, 1, 'Narrazione', 3, 6, '8+', '30', 2008, 'Libellud', 'Jean-Louis Roubira', 'Un gioco di immaginazione e creatività.', 'Movimento', 'Storico' 'https://logowik.com/content/uploads/images/dixit.jpg'),  
+    (8, 'Risiko!', 50.00, 40.00, 1, 'Strategia', 2, 6, '10+', '120', 1968, 'Hasbro', 'Albert Lamorisse', 'Conquista il mondo con la tua strategia!', 'Scelte strategiche', 'Storico', 'https://logowik.com/content/uploads/images/risiko.jpg'),  
+    (9, 'Cluedo', 30.00, 22.00, 1, 'Investigazione', 2, 6, '8+', '45', 1949, 'Hasbro', 'Anthony Pratt', 'Scopri chi è assassino e con quale arma.', 'Interazione tra giocatori', 'Storico', 'https://logowik.com/content/uploads/images/cluedo.jpg'),  
+    (10, 'Scotland Yard', 35.00, 27.00, 1, 'Investigazione', 2, 6, '10+', '45', 1983, 'Ravensburger', 'Werner Schlegel', 'Cattura il misterioso Mister X per vincere.', 'Scelte strategiche', 'Storico', 'https://logowik.com/content/uploads/images/scotlandyard.jpg'),  
+    (11, 'Azul', 40.00, 32.00, 1, 'Astratto', 2, 4, '8+', '40', 2018, 'Plan B Games', 'Michael Kiesling', 'Crea il miglior mosaico con le tessere.', 'Movimento', 'Storico', 'https://cf.geekdo-images.com/aPSHJO0d0XOpQR5X-wJonw__imagepage/img/q4uWd2nXGeEkKDR8Cc3NhXG9PEU=/fit-in/900x600/filters:no_upscale():strip_icc()/pic6973671.png')";
 
 if ($connessione->query($sql) === TRUE) {
     echo "Dati inseriti nella tabella gioco_tavolo<br>";
