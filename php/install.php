@@ -64,7 +64,7 @@ if ($connessione->query($sql) === TRUE) {
 }
 
 // creazione tabella giochi (se non esiste già)
-$sql = "CREATE TABLE IF NOT EXISTS board_games (
+$sql = "CREATE TABLE IF NOT EXISTS gioco_tavolo (
     codice INT(5) NOT NULL PRIMARY KEY,
     titolo VARCHAR(50) NOT NULL, -- Nome 
     prezzo_originale DOUBLE(6,2) NOT NULL,
@@ -98,7 +98,7 @@ $sql = "CREATE TABLE IF NOT EXISTS recensioni (
     testo TEXT,
     data_recensione DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (username) REFERENCES utenti(username) ON DELETE CASCADE,
-    FOREIGN KEY (codice_gioco) REFERENCES board_games(codice) ON DELETE CASCADE
+    FOREIGN KEY (codice_gioco) REFERENCES gioco_tavolo(codice) ON DELETE CASCADE
 )";
 
 if ($connessione->query($sql) === TRUE) {
@@ -131,7 +131,7 @@ $sql = "CREATE TABLE IF NOT EXISTS bonus (
     codice_gioco INT(5),
     data_inizio DATE,
     data_fine DATE,
-    FOREIGN KEY (codice_gioco) REFERENCES board_games(codice) ON DELETE CASCADE
+    FOREIGN KEY (codice_gioco) REFERENCES gioco_tavolo(codice) ON DELETE CASCADE
 )";
 
 if ($connessione->query($sql) === TRUE) {
@@ -189,7 +189,7 @@ if ($connessione->query($sql) === TRUE) {
 }
 
 // popolamento tabella giochi
-$sql = "INSERT IGNORE INTO board_games (codice, titolo, prezzo_originale, prezzo_attuale, disponibile, categoria, min_num_giocatori, max_num_giocatori, min_eta, avg_partita, data_rilascio, nome_editore, autore, descrizione, meccaniche, ambientazione, immagine) VALUES
+$sql = "INSERT IGNORE INTO gioco_tavolo (codice, titolo, prezzo_originale, prezzo_attuale, disponibile, categoria, min_num_giocatori, max_num_giocatori, min_eta, avg_partita, data_rilascio, nome_editore, autore, descrizione, meccaniche, ambientazione, immagine) VALUES
     (1, 'Brass Birmingham', 105.00, 40.00, 1, 'Strategia', 2, 4, '14+', '90', 2018, 'Roxley', 'N/A', 'Brass: Birmingham è il seguito del gioco di strategia economica Brass, capolavoro di Martin Wallace del 2007. Brass: Birmingham racconta la storia di imprenditori in competizione tra loro a Birmingham durante la rivoluzione industriale tra il 1770 e il 1870.', 'Raccolta risorse,Scelte strategiche', 'Storico', 'https://cf.geekdo-images.com/UIlFaaTmaWms7F5xdEFgGA__imagepage/img/SitcV7akzI3P_dl8pPEneEpM-U4=/fit-in/900x600/filters:no_upscale():strip_icc()/pic3549793.jpg'),
     (2, 'Monopoly', 30.00, 20.00, 1, 'Sociale', 2, 6, '8+', '210', 1935, 'Hasbro', 'Elizabeth Magie', 'bello', 'Lancio di dadi, movimento di pedine', 'Storico', 'https://logowik.com/content/uploads/images/monopoly512.logowik.com.webp'),
     (3,'Indovina Chi?', 30.00, 20.00, 1, 'Deduzione', 2, 2, '6+', '20', 1980, 'Hasbro/Milton Bradley', 'Theo e Ora Coster', 'bello', 'Scelta figurine', 'Storico', 'https://hasbrocommunity.it/images/logos/300x300/indovina_chi.jpg?v=1'),
@@ -204,7 +204,7 @@ $sql = "INSERT IGNORE INTO board_games (codice, titolo, prezzo_originale, prezzo
     ";
 
 if ($connessione->query($sql) === TRUE) {
-    echo "Dati inseriti nella tabella board_games<br>";
+    echo "Dati inseriti nella tabella gioco_tavolo<br>";
 }
 
 // popolamento tabella recensioni
