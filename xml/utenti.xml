@@ -1,27 +1,26 @@
 <?xml version="1.0"?>
+<!--
+Nel seguente file vengono riportati tutti gli utenti caricati dal file di install
+successivamente ad ogni registrazione sarà aggiunto un nuovo utente
+ -->
 <utenti>
-  <utente>
-    <username>cliente1</username>
-    <ruolo>cliente</ruolo>
-    <avatar>avatar1.jpg</avatar>
-  </utente>
   <utente>
     <username>admin1</username>
     <ruolo>admin</ruolo>
     <avatar>default_avatar.jpg</avatar>
   </utente>
   <utente>
-    <username>bella</username>
+    <username>gestore1</username>
+    <ruolo>gestore</ruolo>
+    <avatar>default_avatar.jpg</avatar>
+  </utente>
+  <utente>
+    <username>cliente1</username>
     <ruolo>cliente</ruolo>
     <avatar>default_avatar.jpg</avatar>
   </utente>
   <utente>
-    <username>belli</username>
-    <ruolo>cliente</ruolo>
-    <avatar>default_avatar.jpg</avatar>
-  </utente>
-  <utente>
-    <username>simonesimonesimone</username>
+    <username>cliente2</username>
     <ruolo>cliente</ruolo>
     <avatar>default_avatar.jpg</avatar>
   </utente>
@@ -29,5 +28,15 @@
     <username>cliente3</username>
     <ruolo>cliente</ruolo>
     <avatar>avatar2.jpg</avatar>
+  </utente>
+  <utente>
+    <username>gestore2</username>
+    <ruolo>gestore</ruolo>
+    <avatar>avatar3.jpg</avatar>
+  </utente>
+  <utente>
+    <username>cliente4</username>
+    <ruolo>cliente</ruolo>
+    <avatar>avatar5.jpg</avatar>
   </utente>
 </utenti>

@@ -143,21 +143,22 @@ function getBonusDisponibili($codice_gioco) {
               WHERE codice_gioco = ? 
               AND data_inizio <= CURRENT_DATE 
               AND data_fine >= CURRENT_DATE";
-              
-    $stmt = $connessione->prepare($query);
-    $stmt->bind_param("i", $codice_gioco);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    
-    while ($row = $result->fetch_assoc()) {
-        $bonus[] = [
-            'id' => $row['id_bonus'],
-            'ammontare' => $row['crediti_bonus'],
-            'data_inizio' => $row['data_inizio'],
-            'data_fine' => $row['data_fine']
-        ];
+
+    if ($stmt = $connessione->prepare($query)) {
+
+        $stmt->bind_param("i", $codice_gioco);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        while ($row = $result->fetch_assoc()) {
+            $bonus[] = $row;
+        }
+
+        $stmt->close();
+    } else {
+        die("Errore nella preparazione della query: " . $connessione->error);
     }
-    
+
     return $bonus;
 }
 

@@ -23,11 +23,18 @@ if(isset($_SESSION['statoLogin'])){
         <div class="login-form">
             <h2>SIGN <span class="highlight">IN</span></h2>
             <form action="login-form.php" method="POST">
-                <?php if(isset($_GET['error'])): ?>
+                
+                <!-- Messaggi di errore se credenziali sbagliati o utente bannato -->
+                <?php if(isset($_GET['error']) && ($_GET['error'] == '1')){ ?>
                     <div class="error-message">
                         Email o password non validi
                     </div>
-                <?php endif; ?>
+                <?php }elseif(isset($_GET['error']) && ($_GET['error'] == 'banned')){ ?>
+                    <div class="error-message">
+                        Il tuo account è stato bannato <br> Motivo: <?php echo $_GET['motivo'] ?>
+                    </div>
+                <?php } ?>
+
                 <div class="form-group">
                     <input type="email" id="email" name="email" placeholder="Email" required>
                 </div>

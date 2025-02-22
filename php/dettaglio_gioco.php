@@ -55,8 +55,7 @@ function caricaDiscussioni($id_gioco) {
 $discussioni = caricaDiscussioni($id_gioco);
 
 // calcola sconto e bonus
-$prezzo_base = $gioco['prezzo_attuale'];
-$sconto = calcolaSconto($_SESSION['username'] ?? null, $prezzo_base);
+$sconto = calcolaSconto($_SESSION['username'] ?? null, $gioco['prezzo_originale']);
 $bonus = getBonusDisponibili($id_gioco);
 
 // DEBUG
@@ -69,7 +68,7 @@ if (empty($bonus)) {
 <html lang="it">
 <head>
     <meta charset="UTF-8">
-    <title><?php echo htmlspecialchars($gioco['nome']); ?></title>
+    <title><?php echo htmlspecialchars($gioco['titolo']); ?></title>
     <link rel="stylesheet" href="../css/dettaglio.css">
     <link rel="stylesheet" href="../css/menu.css">
     <style>
@@ -163,6 +162,15 @@ if (empty($bonus)) {
         .btn-login:hover {
             background: linear-gradient(45deg, #7B1FA2, #6A1B9A);
         }
+
+        .gioco-immagine {
+            width: 100%;
+            max-width: 300px;
+            height: 300px;
+            object-fit: cover;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
     </style>
 </head>
 <body>
@@ -173,8 +181,7 @@ if (empty($bonus)) {
             <h1 class="titolo-gioco"><?php echo htmlspecialchars($gioco['titolo']); ?></h1>
             
             <div class="gioco-content">
-                <img class="gioco-immagine" src="<?php echo htmlspecialchars($gioco['immagine']); ?>" 
-                     alt="<?php echo htmlspecialchars($gioco['titolo']); ?>">
+                <img class="gioco-immagine" src="<?php echo htmlspecialchars($gioco['immagine']); ?>" alt="<?php echo htmlspecialchars($gioco['titolo']); ?>">
                 
                 <div class="gioco-info">
                     <p class="descrizione"><?php echo htmlspecialchars($gioco['descrizione']); ?></p>
@@ -193,16 +200,20 @@ if (empty($bonus)) {
                         <p><strong>Ambientazione:</strong> <?php echo htmlspecialchars($gioco['ambientazione']); ?></p>
                     </div>
                     
+                    <!-- Variazione di prezzo con sconto -->
                     <div class="prezzi-acquisto">
                         <?php if ($sconto['percentuale'] > 0): ?>
-                            <div class="prezzo-originale"><?php echo $prezzo_base; ?> crediti</div>
+                            <div class="prezzo-originale"><?php echo htmlspecialchars($gioco['prezzo_originale']); ?> crediti</div>
                             <div class="prezzo-scontato">
                                 <?php echo $sconto['prezzo_finale']; ?> crediti
                                 <span class="sconto-info">(-<?php echo $sconto['percentuale']; ?>%)</span>
                             </div>
                             <div class="sconto-motivo"><?php echo $sconto['motivo']; ?></div>
-                        <?php else: ?>
-                            <div class="prezzo"><?php echo $prezzo_base; ?> crediti</div>
+
+                        <!-- Gioco in offerta (mostriamo la variazione di prezzo)-->
+                        <?php elseif($gioco['prezzo_originale'] != $gioco['prezzo_attuale']): ?>
+                            <div class="prezzo-originale"><?php echo htmlspecialchars($gioco['prezzo_originale']); ?> crediti</div>
+                            <div class="prezzo-scontato"> <?php echo htmlspecialchars($gioco['prezzo_attuale']); ?> crediti</div>
                         <?php endif; ?>
                         
                         <?php if (!empty($bonus)): ?>
@@ -210,7 +221,7 @@ if (empty($bonus)) {
                                 <p class="bonus-titolo">Bonus all'acquisto:</p>
                                 <?php foreach ($bonus as $b): ?>
                                     <div class="bonus-badge">
-                                        <span class="bonus-ammontare">+<?php echo htmlspecialchars($b['ammontare']); ?>€ in crediti</span>
+                                        <span class="bonus-ammontare">+<?php echo htmlspecialchars($b['crediti_bonus']); ?>€ in crediti</span>
                                         <span class="bonus-date">
                                             (Valido dal <?php echo date('d/m/Y', strtotime($b['data_inizio'])); ?> 
                                             al <?php echo date('d/m/Y', strtotime($b['data_fine'])); ?>)

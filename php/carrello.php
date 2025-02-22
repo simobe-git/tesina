@@ -37,14 +37,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         // aggiungi al carrello nella sessione in corso
         $_SESSION['carrello'][] = $_POST['codice_gioco'];
         $_SESSION['carrello'] = array_unique($_SESSION['carrello']); // evitiamo duplicati
+
     } elseif (isset($_POST['rimuovi']) && isset($_POST['codice_gioco'])) {
+
         // rimuovi dal carrello nella sessione in corso
         $key = array_search($_POST['codice_gioco'], $_SESSION['carrello']);
         if ($key !== false) {
             unset($_SESSION['carrello'][$key]);
         }
+        
     } elseif (isset($_POST['acquista'])) {
-        // recuperiam il numero di crediti dell'utente
+
+        // recuperiamo il numero di crediti dell'utente
         $query_crediti = "SELECT crediti FROM utenti WHERE username = ?";
         $stmt = $connessione->prepare($query_crediti);
         $stmt->bind_param("s", $_SESSION['username']);
@@ -93,17 +97,35 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
                     $sconto = calcolaSconto($_SESSION['username'], $gioco['prezzo_attuale']);
                     $prezzo_scontato = $gioco['prezzo_attuale'] * (1 - $sconto['percentuale']/100);
-                    $bonus = getBonusDisponibili($codice_gioco);
-
+                    
+                    //La funzione getBonusDisponibili non restituisce il valore del bonus quindi andiamo a cercare il bonus
+                    // ogni gioco può avere un solo bonus attivo per volta
+                    $query = "SELECT * FROM bonus 
+                    WHERE codice_gioco = ? 
+                    AND data_inizio <= CURRENT_DATE 
+                    AND data_fine >= CURRENT_DATE";
+                    $stmt = $connessione->prepare($query);
+                    $stmt->bind_param("i", $codice_gioco);
+                    $stmt->execute();
+                    $bonus = $stmt->get_result()->fetch_assoc();
+                    
+                    //inserimento dati nel file xml
                     $acquisto = $xml->addChild('acquisto');
                     $acquisto->addAttribute('id', uniqid());
                     $acquisto->addChild('username', $_SESSION['username']);
                     $acquisto->addChild('codice_gioco', $codice_gioco);
-                    $acquisto->addChild('prezzo_originale', $gioco['prezzo_attuale']);
+                    $acquisto->addChild('prezzo_originale', $gioco['prezzo_originale']);
                     $acquisto->addChild('prezzo_pagato', $prezzo_scontato);
                     $acquisto->addChild('sconto_applicato', $sconto['percentuale']);
-                    $acquisto->addChild('bonus_ottenuti', $bonus['ammontare'] ?? 0);
+                    $acquisto->addChild('bonus_applicato', $bonus['crediti_bonus']);
                     $acquisto->addChild('data', date('Y-m-d'));
+
+                    //aggiunta crediti del bonus nel saldo crediti dell'utente
+                    $nuovi_crediti += $bonus['crediti_bonus'];
+                    $query_update = "UPDATE utenti SET crediti = ? WHERE username = ?";
+                    $stmt = $connessione->prepare($query_update);
+                    $stmt->bind_param("ds", $nuovi_crediti, $_SESSION['username']);
+                    $stmt->execute();
                 }
 
                 // Formattazione con DOMDocument
