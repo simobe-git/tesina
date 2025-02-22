@@ -18,6 +18,45 @@ if (!isset($_SESSION['username']) || $_SESSION['ruolo'] !== 'admin') {
     exit();
 }
 
+// funzione per vedere/modificare i dati anagrafici, username e password degli utenti.
+function modificaUtente(){
+
+    global $connessione; //per le funzioni permette di accedere alla variabile $connessione dichiarata in connessione.php
+
+    // query per ottenere tutti gli utenti
+    $query = "SELECT email,username,nome,cognome,password FROM utenti WHERE tipo_utente = 'cliente'";
+    $result = $connessione->query($query);
+    
+    if (!$result) {
+        die("Errore nella query $query: " . mysqli_error($connessione));
+    
+    }else{
+
+        // Stampa una scheda per ogni cliente
+        echo "<div class='user-management'>";
+        while ($utente = mysqli_fetch_assoc($result)) {
+            $username = htmlspecialchars($utente['username']);
+            $email = htmlspecialchars($utente['email']);
+            $nome = htmlspecialchars($utente['nome']);
+            $cognome = htmlspecialchars($utente['cognome']);
+            
+
+            echo "<div class='user-card'>";
+            echo "<p>Username: $username</p>";
+            echo "<p>Email: $email</p>";
+            echo "<p>Nome: $nome</p>";
+            echo "<p>Cognome: $cognome</p>";
+            echo "<form action='admin_dashboard.php' method='post' class='user-management-form'>";
+            echo "<input type='hidden' name='username' value='$username'>";
+            echo "<button type='submit' name='modifica' class='user-management-button edit'>Modifica</button>";
+            echo "</form>";
+            echo "</div>"; 
+        }
+        echo "</div>";
+    
+    }
+}
+
 
 // funzione per la gestione di tutte le richieste di acquisto di crediti
 function richiesteCrediti() {
@@ -43,12 +82,6 @@ function richiesteCrediti() {
         echo "</div>";
     }
     echo "</div>";
-}
-
-
-// funzione per vedere/modificare i dati anagrafici, username e password degli utenti.
-function modificaUtente(){
-
 }
 
 
@@ -146,7 +179,7 @@ if (isset($_POST['riattiva'])) {
     exit();
 }
 
-// Approvazione richiesta di crediti è stata approvata
+// Approvazione richiesta di crediti 
 if (isset($_POST['approva'])) {
     $xml_file = '../xml/richieste_crediti.xml';
     $xml = simplexml_load_file($xml_file);
@@ -183,6 +216,44 @@ if (isset($_POST['rifiuta'])) {
     
     header("Location: admin_dashboard.php");
     exit();
+}
+
+
+// Modifica informazioni degli utenti
+if(isset($_POST['modifica'])) {
+    $username = $_POST['username'];
+
+    // Query per ottenere i dati dell'utente dal database
+    $query = "SELECT username, email, nome, cognome FROM utenti WHERE username = '$username'";
+    $result = $connessione->query($query);
+
+    if ($result && $result->num_rows === 1) {
+        $utente = mysqli_fetch_assoc($result);
+        $editUserData = $utente; //array dati dell'utente da modificare
+        $showEditForm = true; //visualizza il form html per modificare i dati dell'utente
+    } else {
+        echo "<p>Errore: utente non trovato.</p>";
+    }
+}
+
+// Salva le modifiche
+if (isset($_POST['salva'])) {
+
+    $username = $_POST['username'];
+    $email = $_POST['email'];
+    $nome = $_POST['nome'];
+    $cognome = $_POST['cognome'];
+
+    // Query per aggiornare i dati dell'utente nel database
+    $query = "UPDATE utenti SET email = '$email', nome = '$nome', cognome = '$cognome' WHERE username = '$username'";
+    $result = $connessione->query($query);
+
+    if ($result) {
+        header("Location: admin_dashboard.php");
+        exit();
+    } else {
+        echo "<p>Errore nella query $query: " . mysqli_error($connessione) . "</p>";
+    }
 }
 
 ?>
@@ -234,6 +305,35 @@ if (isset($_POST['rifiuta'])) {
                 <?php gestioneUtenti(); ?>
             </section>
         </div>
+
+        <!-- Modulo di modifica utente -->
+        <?php if ($showEditForm): ?>
+        <div class="user-edit-form">
+            <form action="admin_dashboard.php" method="post">
+                <input type="hidden" name="username" value="<?php echo htmlspecialchars($editUserData['username']); ?>">
+                <label for="email">Email:</label>
+                <input type="email" name="email" value="<?php echo htmlspecialchars($editUserData['email']); ?>" required>
+                <label for="nome">Nome:</label>
+                <input type="text" name="nome" value="<?php echo htmlspecialchars($editUserData['nome']); ?>" required>
+                <label for="cognome">Cognome:</label>
+                <input type="text" name="cognome" value="<?php echo htmlspecialchars($editUserData['cognome']); ?>" required>
+                <button type="submit" name="salva" class="user-management-button save">Salva</button>
+            </form>
+        </div>
+        <?php endif; ?>
     </main>
 </body>
+<script>
+        function openEditForm(username, email, nome, cognome) {
+            document.getElementById('edit-username').value = username;
+            document.getElementById('edit-email').value = email;
+            document.getElementById('edit-nome').value = nome;
+            document.getElementById('edit-cognome').value = cognome;
+            document.getElementById('popup-overlay').style.display = 'flex';
+        }
+
+        function closeEditForm() {
+            document.getElementById('popup-overlay').style.display = 'none';
+        }
+    </script>
 </html>
