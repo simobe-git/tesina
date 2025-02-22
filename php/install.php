@@ -1,4 +1,4 @@
-<?php //problema risolto
+<?php
 require_once('dati-connessione.php');
 // creiamo una connessione senza specificare il database
 $connessione = new mysqli($hostname, $user, $password);
