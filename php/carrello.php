@@ -120,12 +120,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     $acquisto->addChild('bonus_applicato', $bonus['crediti_bonus']);
                     $acquisto->addChild('data', date('Y-m-d'));
 
-                    //aggiunta crediti del bonus nel saldo crediti dell'utente
-                    $nuovi_crediti += $bonus['crediti_bonus'];
-                    $query_update = "UPDATE utenti SET crediti = ? WHERE username = ?";
-                    $stmt = $connessione->prepare($query_update);
-                    $stmt->bind_param("ds", $nuovi_crediti, $_SESSION['username']);
-                    $stmt->execute();
+                    //Se l'acquisto di un gioco prevede un bonus in crediti lo aggiungiamo al totale dei crediti dell'utente
+                    if($bonus['crediti_bonus'] != 0){
+
+                        $nuovi_crediti += $bonus['crediti_bonus'];
+                        $query_update = "UPDATE utenti SET crediti = ? WHERE username = ?";
+                        $stmt = $connessione->prepare($query_update);
+                        $stmt->bind_param("ds", $nuovi_crediti, $_SESSION['username']);
+                        $stmt->execute();
+                    }
                 }
 
                 // Formattazione con DOMDocument
