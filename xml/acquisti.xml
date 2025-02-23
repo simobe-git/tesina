@@ -98,4 +98,13 @@
     <bonus_ottenuti>0</bonus_ottenuti>
     <data>2025-02-20</data>
   </acquisto>
+  <acquisto id="67bb17ff06179">
+    <username>cliente1</username>
+    <codice_gioco>11</codice_gioco>
+    <prezzo_originale>40</prezzo_originale>
+    <prezzo_pagato>32</prezzo_pagato>
+    <sconto_applicato>0</sconto_applicato>
+    <bonus_applicato/>
+    <data>2025-02-23</data>
+  </acquisto>
 </acquisti>
