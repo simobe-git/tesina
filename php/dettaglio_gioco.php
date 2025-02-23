@@ -190,8 +190,9 @@ if (empty($bonus)) {
                         <p><strong>Giocatori:</strong> <?php echo htmlspecialchars($gioco['min_num_giocatori']); ?> - <?php echo htmlspecialchars($gioco['max_num_giocatori']); ?></p>
                         <p><strong>Et&aacute; Minima:</strong> <?php echo htmlspecialchars($gioco['min_eta']); ?></p>
                         <p><strong>Durata Partita:</strong> <?php echo htmlspecialchars($gioco['avg_partita']); ?></p>
-                        <p><strong>Pubblicazione:</strong> <?php 
-                                                            $anno = date("Y", strtotime($gioco['data_rilascio'])); 
+                        <p><strong>Pubblicazione:</strong> <?php
+                                                            $date = new DateTime($gioco['data_rilascio']);  
+                                                            $anno = $date->format('Y');
                                                             echo htmlspecialchars($anno); ?>
                         </p>
                         <p><strong>Editore:</strong> <?php echo htmlspecialchars($gioco['nome_editore']); ?></p>
