@@ -7,7 +7,6 @@
     <prezzo>59.99</prezzo>
     <data>2024-03-15</data>
   </acquisto>
-  <!-- altri acquisti... -->
   <acquisto id="67b5c26370e65">
     <username>cliente1</username>
     <codice_gioco>11</codice_gioco>
