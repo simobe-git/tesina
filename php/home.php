@@ -44,10 +44,6 @@ if (count($giochi) < 3) {
     }
 }
 
-// Debug: Stampa i giochi casuali
-echo '<pre>';
-print_r($giochiCasuali);
-echo '</pre>';
 ?>
 
 <!DOCTYPE html>
