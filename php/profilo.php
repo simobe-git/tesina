@@ -89,7 +89,7 @@ if (file_exists($xml_file)) {
 
 // funzione per ottenere l'avatar attuale dell'utente dal file XML
 function getAvatarUtente($username) {
-    $xml_file = '../xml/utenti.xml';
+    $xml_file = '../xml/avatar.xml';
     if (file_exists($xml_file)) {
         $xml = simplexml_load_file($xml_file);
         foreach ($xml->utente as $utente) {
@@ -103,7 +103,7 @@ function getAvatarUtente($username) {
 
 // funzione per aggiornare l'avatar nel file XML
 function updateAvatarXML($username, $nuovo_avatar) {
-    $xml_file = '../xml/utenti.xml';
+    $xml_file = '../xml/avatar.xml';
     $xml = simplexml_load_file($xml_file);
     $aggiornato = false;
 
@@ -141,8 +141,8 @@ $avatar_attuale = getAvatarUtente($_SESSION['username']);
 // aggiorno stato utente a admin
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['richesta_admin'])) {
     
-    // carica file xml utenti modificando il ruolo dell'utente in richiesta_admin
-    $xml_file = '../xml/utenti.xml';
+    // carica file xml degli avatar modificando il ruolo dell'utente in richiesta_admin
+    $xml_file = '../xml/avatar.xml';
     $xml = simplexml_load_file($xml_file);
     $aggiornato = false;
 
