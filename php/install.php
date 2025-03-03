@@ -25,9 +25,9 @@ $connessione->query('SET FOREIGN_KEY_CHECKS = 0');
 // eliminiamo le tabelle nell'ordine corretto
 $tabelle = [
     'giudizi_recensioni',
-    'recensioni',
+    //'recensioni',
     'bonus',
-    'gioco_tavolo',
+    //'gioco_tavolo',
     'utenti',
     'faq',
     'carrello'
@@ -63,7 +63,7 @@ if ($connessione->query($sql) === TRUE) {
     echo "Errore nella creazione della tabella utenti: " . $connessione->error . "<br>";
 }
 
-// creazione tabella giochi (se non esiste già)
+/* creazione tabella giochi (se non esiste già)
 $sql = "CREATE TABLE IF NOT EXISTS gioco_tavolo (
     codice INT(5) NOT NULL PRIMARY KEY,
     titolo VARCHAR(50) NOT NULL,  
@@ -88,9 +88,9 @@ if ($connessione->query($sql) === TRUE) {
     echo "Tabella giochi creata con successo o già esistente<br>";
 } else {
     echo "Errore nella creazione della tabella giochi: " . $connessione->error . "<br>";
-}
+} */
 
-// creazione tabella recensioni
+/* creazione tabella recensioni
 $sql = "CREATE TABLE IF NOT EXISTS recensioni (
     id_recensione INT AUTO_INCREMENT PRIMARY KEY,
     username VARCHAR(30),
@@ -105,7 +105,7 @@ if ($connessione->query($sql) === TRUE) {
     echo "Tabella recensioni creata con successo o già esistente<br>";
 } else {
     echo "Errore nella creazione della tabella recensioni: " . $connessione->error . "<br>";
-}
+} */
 
 // creazione tabella giudizi_recensioni
 $sql = "CREATE TABLE IF NOT EXISTS giudizi_recensioni (
@@ -158,7 +158,7 @@ if ($connessione->query($sql) === TRUE) {
     echo "Errore nell'inserimento degli utenti: " . $connessione->error . "<br>";
 }
 
-// popolamento tabella giochi_tavolo
+/* popolamento tabella giochi_tavolo
 $sql = "INSERT IGNORE INTO gioco_tavolo (codice, titolo, prezzo_originale, prezzo_attuale, disponibile, categoria, min_num_giocatori, max_num_giocatori, min_eta, avg_partita, data_rilascio, nome_editore, autore, descrizione, meccaniche, ambientazione, immagine) VALUES
     (1, 'Brass Birmingham', 105.00, 40.00, 1, 'Strategia', 2, 4, '14+', 90, 2018-02-23, 'Roxley', 'Bravan Grown', 'Racconta la storia di imprenditori in competizione tra loro a Birmingham durante la rivoluzione industriale.', 'Raccolta risorse,Scelte strategiche', 'Storico', 'https://cf.geekdo-images.com/UIlFaaTmaWms7F5xdEFgGA__imagepage/img/SitcV7akzI3P_dl8pPEneEpM-U4=/fit-in/900x600/filters:no_upscale():strip_icc()/pic3549793.jpg'),
     (2, 'Monopoly', 30.00, 20.00, 1, 'Sociale', 2, 6, '8+', 210, 1935-01-01, 'Hasbro', 'Elizabeth Magie', 'bello', 'Lancio di dadi,Movimento di pedine', 'Storico', 'https://logowik.com/content/uploads/images/monopoly512.logowik.com.webp'),
@@ -176,9 +176,9 @@ if ($connessione->query($sql) === TRUE) {
     echo "Dati inseriti nella tabella gioco_tavolo<br>";
 } else {
     echo "Errore nell'inserimento degli utenti: " . $connessione->error . "<br>";
-}
+}   */
 
-// popolamento tabella recensioni
+/* popolamento tabella recensioni
 $sql = "INSERT IGNORE INTO recensioni (username, codice_gioco, testo) VALUES
     ('cliente1', 10001, 'Gioco fantastico, grafica stupenda e trama coinvolgente!'),
     ('cliente2', 10001, 'Uno dei migliori giochi mai provati'),
@@ -194,7 +194,7 @@ $sql = "INSERT IGNORE INTO recensioni (username, codice_gioco, testo) VALUES
 
 if ($connessione->query($sql) === TRUE) {
     echo "Dati inseriti nella tabella recensioni<br>";
-}
+} */
 
 // popolamento tabella giudizi_recensioni
 $sql = "INSERT IGNORE INTO giudizi_recensioni (id_recensione, username_votante, supporto, utilita) VALUES

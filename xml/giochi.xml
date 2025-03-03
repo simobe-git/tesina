@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<giochi>
+    <gioco>
+        <codice>1</codice>
+        <titolo>Brass Birmingham</titolo>
+        <prezzo_originale>105.00</prezzo_originale>
+        <prezzo_attuale>40.00</prezzo_attuale>
+        <disponibile>true</disponibile>
+        <categoria>Strategia</categoria>
+        <min_num_giocatori>2</min_num_giocatori>
+        <max_num_giocatori>4</max_num_giocatori>
+        <min_eta>14+</min_eta>
+        <avg_partita>90</avg_partita>
+        <data_rilascio>2018-02-23</data_rilascio>
+        <nome_editore>Roxley</nome_editore>
+        <autore>Bravan Grown</autore>
+        <descrizione>Racconta la storia di imprenditori in competizione tra loro a Birmingham durante la rivoluzione industriale.</descrizione>
+        <meccaniche>Raccolta risorse,Scelte strategiche</meccaniche>
+        <ambientazione>Storico</ambientazione>
+        <immagine>https://cf.geekdo-images.com/UIlFaaTmaWms7F5xdEFgGA__imagepage/img/SitcV7akzI3P_dl8pPEneEpM-U4=/fit-in/900x600/filters:no_upscale():strip_icc()/pic3549793.jpg</immagine>
+    </gioco>
+    <gioco>
+        <codice>2</codice>
+        <titolo>Monopoly</titolo>
+        <prezzo_originale>30.00</prezzo_originale>
+        <prezzo_attuale>20.00</prezzo_attuale>
+        <disponibile>true</disponibile>
+        <categoria>Sociale</categoria>
+        <min_num_giocatori>2</min_num_giocatori>
+        <max_num_giocatori>6</max_num_giocatori>
+        <min_eta>8+</min_eta>
+        <avg_partita>210</avg_partita>
+        <data_rilascio>1935-01-01</data_rilascio>
+        <nome_editore>Hasbro</nome_editore>
+        <autore>Elizabeth Magie</autore>
+        <descrizione>bello</descrizione>
+        <meccaniche>Lancio di dadi,Movimento di pedine</meccaniche>
+        <ambientazione>Storico</ambientazione>
+        <immagine>https://logowik.com/content/uploads/images/monopoly512.logowik.com.webp</immagine>
+    </gioco>
+    <gioco>
+        <codice>3</codice>
+        <titolo>Indovina Chi?</titolo>
+        <prezzo_originale>30.00</prezzo_originale>
+        <prezzo_attuale>20.00</prezzo_attuale>
+        <disponibile>true</disponibile>
+        <categoria>Deduzione</categoria>
+        <min_num_giocatori>2</min_num_giocatori>
+        <max_num_giocatori>2</max_num_giocatori>
+        <min_eta>6+</min_eta>
+        <avg_partita>20</avg_partita>
+        <data_rilascio>1980-01-01</data_rilascio>
+        <nome_editore>Hasbro/Milton Bradley</nome_editore>
+        <autore>Theo e Ora Coster</autore>
+        <descrizione>bello</descrizione>
+        <meccaniche>Scelte strategiche</meccaniche>
+        <ambientazione>Storico</ambientazione>
+        <immagine>https://hasbrocommunity.it/images/logos/300x300/indovina_chi.jpg?v=1</immagine>
+    </gioco>
+    <gioco>
+        <codice>4</codice>
+        <titolo>Jenga</titolo>
+        <prezzo_originale>35.00</prezzo_originale>
+        <prezzo_attuale>25.00</prezzo_attuale>
+        <disponibile>true</disponibile>
+        <categoria>Costruzioni</categoria>
+        <min_num_giocatori>1</min_num_giocatori>
+        <max_num_giocatori>8</max_num_giocatori>
+        <min_eta>6+</min_eta>
+        <avg_partita>15</avg_partita>
+        <data_rilascio>2018-01-01</data_rilascio>
+        <nome_editore>Hasbro</nome_editore>
+        <autore>Leslie Scott</autore>
+        <descrizione>Non farla cadere!</descrizione>
+        <meccaniche>Scelte strategiche</meccaniche>
+        <ambientazione>Storico</ambientazione>
+        <immagine>https://logowik.com/content/uploads/images/jenga5734.logowik.com.webp</immagine>
+    </gioco>
+    <gioco>
+        <codice>5</codice>
+        <titolo>Catan</titolo>
+        <prezzo_originale>45.00</prezzo_originale>
+        <prezzo_attuale>35.00</prezzo_attuale>
+        <disponibile>true</disponibile>
+        <categoria>Gestionale</categoria>
+        <min_num_giocatori>3</min_num_giocatori>
+        <max_num_giocatori>4</max_num_giocatori>
+        <min_eta>10+</min_eta>
+        <avg_partita>90</avg_partita>
+        <data_rilascio>1995-01-01</data_rilascio>
+        <nome_editore>Kosmos</nome_editore>
+        <autore>Klaus Teuber</autore>
+        <descrizione>Colleziona risorse e costruisci il tuo impero!</descrizione>
+        <meccaniche>Raccolta risorse</meccaniche>
+        <ambientazione>Storico</ambientazione>
+        <immagine>https://logowik.com/content/uploads/images/catan.jpg</immagine>
+    </gioco>
+    <gioco>
+        <codice>6</codice>
+        <titolo>Carcassonne</titolo>
+        <prezzo_originale>40.00</prezzo_originale>
+        <prezzo_attuale>30.00</prezzo_attuale>
+        <disponibile>true</disponibile>
+        <categoria>Piazzamento tessere</categoria>
+        <min_num_giocatori>2</min_num_giocatori>
+        <max_num_giocatori>5</max_num_giocatori>
+        <min_eta>7+</min_eta>
+        <avg_partita>35</avg_partita>
+        <data_rilascio>2000-01-01</data_rilascio>
+        <nome_editore>Hans im Glück</nome_editore>
+        <autore>Klaus-Jürgen Wrede</autore>
+        <descrizione>Costruisci città e conquista territori.</descrizione>
+        <meccaniche>Raccolta risorse,Scelte strategiche</meccaniche>
+        <ambientazione>Storico</ambientazione>
+        <immagine>https://logowik.com/content/uploads/images/carcassonne.jpg</immagine>
+    </gioco>
+    <gioco>
+        <codice>7</codice>
+        <titolo>Dixit</titolo>
+        <prezzo_originale>35.00</prezzo_originale>
+        <prezzo_attuale>28.00</prezzo_attuale>
+        <disponibile>true</disponibile>
+        <categoria>Narrazione</categoria>
+        <min_num_giocatori>3</min_num_giocatori>
+        <max_num_giocatori>6</max_num_giocatori>
+        <min_eta>8+</min_eta>
+        <avg_partita>30</avg_partita>
+        <data_rilascio>2008-01-01</data_rilascio>
+        <nome_editore>Libellud</nome_editore>
+        <autore>Jean-Louis Roubira</autore>
+        <descrizione>Un gioco di immaginazione e creatività.</descrizione>
+        <meccaniche>Movimento</meccaniche>
+        <ambientazione>Storico</ambientazione>
+        <immagine>https://logowik.com/content/uploads/images/dixit.jpg</immagine>
+    </gioco>
+    <gioco>
+        <codice>8</codice>
+        <titolo>Risiko!</titolo>
+        <prezzo_originale>50.00</prezzo_originale>
+        <prezzo_attuale>40.00</prezzo_attuale>
+        <disponibile>true</disponibile>
+        <categoria>Strategia</categoria>
+        <min_num_giocatori>2</min_num_giocatori>
+        <max_num_giocatori>6</max_num_giocatori>
+        <min_eta>10+</min_eta>
+        <avg_partita>120</avg_partita>
+        <data_rilascio>1968-01-01</data_rilascio>
+        <nome_editore>Hasbro</nome_editore>
+        <autore>Albert Lamorisse</autore>
+        <descrizione>Conquista il mondo con la tua strategia!</descrizione>
+        <meccaniche>Scelte strategiche</meccaniche>
+        <ambientazione>Storico</ambientazione>
+        <immagine>https://logowik.com/content/uploads/images/risiko.jpg</immagine>
+    </gioco>
+    <gioco>
+        <codice>9</codice>
+        <titolo>Cluedo</titolo>
+        <prezzo_originale>30.00</prezzo_originale>
+        <prezzo_attuale>22.00</prezzo_attuale>
+        <disponibile>true</disponibile>
+        <categoria>Investigazione</categoria>
+        <min_num_giocatori>2</min_num_giocatori>
+        <max_num_giocatori>6</max_num_giocatori>
+        <min_eta>8+</min_eta>
+        <avg_partita>45</avg_partita>
+        <data_rilascio>1949-01-01</data_rilascio>
+        <nome_editore>Hasbro</nome_editore>
+        <autore>Anthony Pratt</autore>
+        <descrizione>Scopri chi è assassino e con quale arma.</descrizione>
+        <meccaniche>Interazione tra giocatori</meccaniche>
+        <ambientazione>Storico</ambientazione>
+        <immagine>https://logowik.com/content/uploads/images/cluedo.jpg</immagine>
+    </gioco>
+    <gioco>
+        <codice>10</codice>
+        <titolo>Scotland Yard</titolo>
+        <prezzo_originale>35.00</prezzo_originale>
+        <prezzo_attuale>27.00</prezzo_attuale>
+        <disponibile>true</disponibile>
+        <categoria>Investigazione</categoria>
+        <min_num_giocatori>2</min_num_giocatori>
+        <max_num_giocatori>6</max_num_giocatori>
+        <min_eta>10+</min_eta>
+        <avg_partita>45</avg_partita>
+        <data_rilascio>1983-01-01</data_rilascio>
+        <nome_editore>Ravensburger</nome_editore>
+        <autore>Werner Schlegel</autore>
+        <descrizione>Cattura il misterioso Mister X per vincere.</descrizione>
+        <meccaniche>Scelte strategiche</meccaniche>
+        <ambientazione>Storico</ambientazione>
+        <immagine>https://logowik.com/content/uploads/images/scotlandyard.jpg</immagine>
+    </gioco>
+    <gioco>
+        <codice>11</codice>
+        <titolo>Azul</titolo>
+        <prezzo_originale>40.00</prezzo_originale>
+        <prezzo_attuale>32.00</prezzo_attuale>
+        <disponibile>true</disponibile>
+        <categoria>Astratto</categoria>
+        <min_num_giocatori>2</min_num_giocatori>
+        <max_num_giocatori>4</max_num_giocatori>
+        <min_eta>8+</min_eta>
+        <avg_partita>40</avg_partita>
+        <data_rilascio>2018-01-01</data_rilascio>
+        <nome_editore>Plan B Games</nome_editore>
+        <autore>Michael Kiesling</autore>
+        <descrizione>Crea il miglior mosaico con le tessere.</descrizione>
+        <meccaniche>Movimento</meccaniche>
+        <ambientazione>Storico</ambientazione>
+        <immagine>https://cf.geekdo-images.com/aPSHJO0d0XOpQR5X-wJonw__imagepage/img/q4uWd2nXGeEkKDR8Cc3NhXG9PEU=/fit-in/900x600/filters:no_upscale():strip_icc()/pic6973671.png</immagine>
+    </gioco>
+</giochi>

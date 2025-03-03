@@ -1,6 +1,5 @@
 <?php
 session_start();
-require_once('connessione.php');
 require_once('funzioni_sconti_bonus.php');
 
 // se utente è un admin lo reindirizziamo alla home
@@ -8,6 +7,10 @@ if (isset($_SESSION['ruolo']) && $_SESSION['ruolo'] === 'admin') {
     header('Location: home.php');
     exit();
 }
+
+// Caricamento dei giochi dal file XML
+$xml = simplexml_load_file('giochi.xml'); // Carica il file XML
+$giochi = json_decode(json_encode($xml->gioco), true); // Converte l'XML in un array
 
 function calcolaBonus($codiceGioco) {
     global $connessione;
@@ -66,6 +69,18 @@ $risultato_editori = $connessione->query($query_editori);
 $genere = isset($_GET['categoria']) ? $_GET['categoria'] : '';
 $editore = isset($_GET['editore']) ? $_GET['editore'] : '';
 
+// Filtraggio dei giochi
+if ($genere) {
+    $giochi = array_filter($giochi, function($gioco) use ($genere) {
+        return $gioco['categoria'] === $genere;
+    });
+}
+if ($editore) {
+    $giochi = array_filter($giochi, function($gioco) use ($editore) {
+        return $gioco['nome_editore'] === $editore;
+    });
+}
+
 // query con i filtri
 $query = "SELECT *, 
           CASE 
@@ -75,13 +90,6 @@ $query = "SELECT *,
           END AS prezzo_effettivo 
           FROM gioco_tavolo
           WHERE 1=1";  // condizione sempre vera per concatenare la AND
-
-if ($genere) {
-    $query .= " AND categoria = '" . $connessione->real_escape_string($genere) . "'";
-}
-if ($editore) {
-    $query .= " AND nome_editore = '" . $connessione->real_escape_string($editore) . "'";
-}
 
 $query .= " ORDER BY ";
 

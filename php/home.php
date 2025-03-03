@@ -14,16 +14,13 @@ if (isset($_SESSION['username'])) {
     }
 }
 
-// query per selezionare 3 giochi casuali tra quelli presenti da mostrare a schermo
-$sql = "SELECT * FROM gioco_tavolo ORDER BY RAND() LIMIT 3";
-$result = $connessione->query($sql);
+// Caricamento dei giochi dal file XML
+$xml = simplexml_load_file('giochi.xml'); // Carica il file XML
+$giochi = json_decode(json_encode($xml->gioco), true); // Converte l'XML in un array
 
-$giochi = [];
-if ($result->num_rows > 0) {
-    while ($row = $result->fetch_assoc()) {
-        $giochi[] = $row;
-    }
-}
+// Seleziona 3 giochi casuali
+$giochiCasuali = array_rand($giochi, 3); // Seleziona 3 indici casuali
+$giochi = array_intersect_key($giochi, array_flip($giochiCasuali)); // Ottieni i giochi casuali
 ?>
 
 <!DOCTYPE html>

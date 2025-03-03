@@ -5,16 +5,20 @@ session_start();
 // può accedere al catalogo in modo anonimo ma per effettuare acquisti 
 // dovrà necessariamente identificarsi
 
-require_once("connessione.php");
+// Caricamento dei giochi dal file XML
+$xml = simplexml_load_file('giochi.xml'); // Carica il file XML
+$giochi = json_decode(json_encode($xml->gioco), true); // Converte l'XML in un array
+
+// Filtraggio dei giochi in offerta
+$giochiInOfferta = array_filter($giochi, function($gioco) {
+    return $gioco['prezzo_attuale'] < $gioco['prezzo_originale'];
+});
 
 // se utente è un admin lo reindirizziamo alla home
 if (isset($_SESSION['ruolo']) && $_SESSION['ruolo'] === 'admin') {
     header('Location: home.php');
     exit();
 }
-
-$query_offerte = "SELECT * FROM gioco_tavolo WHERE prezzo_attuale <> prezzo_originale";
-$risultato = mysqli_query($connessione,$query_offerte);
 
 // gestione dell'aggiunta al carrello
 if(isset($_POST['aggiungi_al_carrello']) && isset($_POST['codice_gioco'])) {

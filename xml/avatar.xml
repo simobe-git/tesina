@@ -6,37 +6,30 @@ successivamente ad ogni registrazione sarà aggiunto un nuovo utente
 <utenti>
   <utente>
     <username>admin1</username>
-    <ruolo>admin</ruolo>
     <avatar>default_avatar.jpg</avatar>
   </utente>
   <utente>
     <username>gestore1</username>
-    <ruolo>gestore</ruolo>
     <avatar>default_avatar.jpg</avatar>
   </utente>
   <utente>
     <username>cliente1</username>
-    <ruolo>cliente</ruolo>
     <avatar>default_avatar.jpg</avatar>
   </utente>
   <utente>
     <username>cliente2</username>
-    <ruolo>cliente</ruolo>
     <avatar>default_avatar.jpg</avatar>
   </utente>
   <utente>
     <username>cliente3</username>
-    <ruolo>cliente</ruolo>
     <avatar>avatar2.jpg</avatar>
   </utente>
   <utente>
     <username>gestore2</username>
-    <ruolo>gestore</ruolo>
     <avatar>avatar3.jpg</avatar>
   </utente>
   <utente>
     <username>cliente4</username>
-    <ruolo>cliente</ruolo>
     <avatar>avatar5.jpg</avatar>
   </utente>
 </utenti>
