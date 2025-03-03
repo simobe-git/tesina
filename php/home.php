@@ -32,10 +32,6 @@ if (isset($giochi['gioco'])) {
     exit; // Esci dallo script
 }
 
-// Debug: Stampa l'array di giochi
-echo '<pre>';
-print_r($giochi);
-echo '</pre>';
 
 // Seleziona 3 giochi casuali
 if (count($giochi) < 3) {
