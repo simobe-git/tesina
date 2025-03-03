@@ -15,12 +15,43 @@ if (isset($_SESSION['username'])) {
 }
 
 // Caricamento dei giochi dal file XML
-$xml = simplexml_load_file('giochi.xml'); // Carica il file XML
-$giochi = json_decode(json_encode($xml->gioco), true); // Converte l'XML in un array
+$xml = simplexml_load_file('../xml/giochi.xml'); // Carica il file XML
+
+if ($xml === false) {
+    die("Errore nel caricamento del file XML.");
+}
+
+$giochi = json_decode(json_encode($xml), true); // Converte l'XML in un array
+// Controlla se l'array contiene i giochi
+if (isset($giochi['gioco'])) {
+    // Se l'array è presente, accedi ai giochi
+    $giochi = $giochi['gioco'];
+} else {
+    // Se non ci sono giochi, mostra un messaggio
+    echo "<p>Nessun gioco trovato nel catalogo.</p>";
+    exit; // Esci dallo script
+}
+
+// Debug: Stampa l'array di giochi
+echo '<pre>';
+print_r($giochi);
+echo '</pre>';
 
 // Seleziona 3 giochi casuali
-$giochiCasuali = array_rand($giochi, 3); // Seleziona 3 indici casuali
-$giochi = array_intersect_key($giochi, array_flip($giochiCasuali)); // Ottieni i giochi casuali
+if (count($giochi) < 3) {
+    $giochiCasuali = $giochi; // Seleziona tutti i giochi se sono meno di 3
+} else {
+    $indiciCasuali = array_rand($giochi, 3); // Seleziona 3 indici casuali
+    $giochiCasuali = []; // Inizializza l'array per i giochi casuali
+    foreach ($indiciCasuali as $indice) {
+        $giochiCasuali[] = $giochi[$indice]; // Accedi ai dati associati agli indici
+    }
+}
+
+// Debug: Stampa i giochi casuali
+echo '<pre>';
+print_r($giochiCasuali);
+echo '</pre>';
 ?>
 
 <!DOCTYPE html>
@@ -229,7 +260,7 @@ $giochi = array_intersect_key($giochi, array_flip($giochiCasuali)); // Ottieni i
     <section class="featured-games">
     <h2 style="text-align: center; font-size: 2.5rem; margin-bottom: 2rem;">Giochi in Evidenza</h2>
     <div class="games-grid">
-        <?php foreach ($giochi as $gioco): ?>
+        <?php foreach ($giochiCasuali as $gioco): ?>
             <div class="game-card">
                 <img src="<?php echo htmlspecialchars($gioco['immagine']); ?>" 
                      alt="<?php echo htmlspecialchars($gioco['titolo']); ?>">

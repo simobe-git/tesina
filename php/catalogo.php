@@ -9,8 +9,18 @@ if (isset($_SESSION['ruolo']) && $_SESSION['ruolo'] === 'admin') {
 }
 
 // Caricamento dei giochi dal file XML
-$xml = simplexml_load_file('giochi.xml'); // Carica il file XML
-$giochi = json_decode(json_encode($xml->gioco), true); // Converte l'XML in un array
+$xml = simplexml_load_file('../xml/giochi.xml'); // Carica il file XML
+$giochi = json_decode(json_encode($xml), true); // Converte l'XML in un array
+
+// Controlla se l'array contiene i giochi
+if (isset($giochi['gioco'])) {
+    // Se l'array è presente, accedi ai giochi
+    $giochi = $giochi['gioco'];
+} else {
+    // Se non ci sono giochi, mostra un messaggio
+    echo "<p>Nessun gioco trovato nel catalogo.</p>";
+    exit; // Esci dallo script
+}
 
 function calcolaBonus($codiceGioco) {
     global $connessione;
@@ -19,7 +29,7 @@ function calcolaBonus($codiceGioco) {
     // verifica se esiste un bonus nel database
     $query = "SELECT b.*, v.titolo as nome_gioco 
               FROM bonus b 
-              JOIN gioco_tavolo v ON b.codice_gioco = v.codice 
+              // JOIN gioco_tavolo v ON b.codice_gioco = v.codice 
               WHERE b.codice_gioco = ? 
               AND b.data_inizio <= CURRENT_DATE 
               AND b.data_fine >= CURRENT_DATE";
@@ -58,13 +68,6 @@ if (!in_array($direzione, $direzioni_permesse)) {
     $direzione = 'ASC';
 }
 
-// query per ottenere generi ed editori (univoci)
-$query_generi = "SELECT DISTINCT categoria FROM gioco_tavolo WHERE categoria IS NOT NULL ORDER BY categoria";
-$risultato_generi = $connessione->query($query_generi);
-
-$query_editori = "SELECT DISTINCT nome_editore FROM gioco_tavolo WHERE nome_editore IS NOT NULL ORDER BY nome_editore";
-$risultato_editori = $connessione->query($query_editori);
-
 // gestione dei filtri
 $genere = isset($_GET['categoria']) ? $_GET['categoria'] : '';
 $editore = isset($_GET['editore']) ? $_GET['editore'] : '';
@@ -81,27 +84,27 @@ if ($editore) {
     });
 }
 
-// query con i filtri
-$query = "SELECT *, 
-          CASE 
-            WHEN prezzo_attuale IS NOT NULL AND prezzo_attuale < prezzo_originale 
-            THEN prezzo_attuale 
-            ELSE prezzo_originale 
-          END AS prezzo_effettivo 
-          FROM gioco_tavolo
-          WHERE 1=1";  // condizione sempre vera per concatenare la AND
+// Non è più necessario eseguire una query sul database per ottenere i giochi
+// $query = "SELECT *, 
+//           CASE 
+//             WHEN prezzo_attuale IS NOT NULL AND prezzo_attuale < prezzo_originale 
+//             THEN prezzo_attuale 
+//             ELSE prezzo_originale 
+//           END AS prezzo_effettivo 
+//           FROM gioco_tavolo
+//           WHERE 1=1";  // condizione sempre vera per concatenare la AND
 
-$query .= " ORDER BY ";
+// $query .= " ORDER BY ";
 
 // gestione ordinamento con prezzo effettivo
-if ($ordinamento === 'prezzo') {
-    $query .= "prezzo_effettivo";
-} else {
-    $query .= $ordinamento;
-}
-$query .= " " . $direzione;
+// if ($ordinamento === 'prezzo') {
+//     $query .= "prezzo_effettivo";
+// } else {
+//     $query .= $ordinamento;
+// }
+// $query .= " " . $direzione;
 
-$risultato = $connessione->query($query);
+// $risultato = $connessione->query($query);
 ?>
 
 <!DOCTYPE html>
@@ -109,7 +112,7 @@ $risultato = $connessione->query($query);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Catalogo Videogiochi</title>
+    <title>Catalogo Giochi da Tavolo</title>
     <link rel="stylesheet" href="../css/giochi.css">
     <link rel="stylesheet" href="../css/menu.css">
     <script src="../js/filtri.js"></script>
@@ -118,7 +121,7 @@ $risultato = $connessione->query($query);
     <?php include('menu.php'); ?>
 
     <header class="intestazione-negozio">
-        <h1>Catalogo Videogiochi</h1>
+        <h1>Catalogo Giochi da Tavolo</h1>
     </header>
 
     <div class="filtri-sezione">
@@ -126,7 +129,7 @@ $risultato = $connessione->query($query);
             <div class="filtro-box">
                 <span class="filtro-label">Ordina per:</span>
                 <select class="filtro-select" id="ordinamento" onchange="applicaFiltri()">
-                    <option value="nome" <?php echo $ordinamento === 'nome' ? 'selected' : ''; ?>>Nome</option>
+                    <option value="titolo" <?php echo $ordinamento === 'titolo' ? 'selected' : ''; ?>>Nome</option>
                     <option value="prezzo" <?php echo $ordinamento === 'prezzo' ? 'selected' : ''; ?>>Prezzo</option>
                     <option value="data_rilascio" <?php echo $ordinamento === 'data_rilascio' ? 'selected' : ''; ?>>Anno di uscita</option>
                 </select>
@@ -144,12 +147,15 @@ $risultato = $connessione->query($query);
                 <span class="filtro-label">Genere:</span>
                 <select class="filtro-select" id="genere" onchange="applicaFiltri()">
                     <option value="">Tutti i generi</option>
-                    <?php while($genere = $risultato_generi->fetch_assoc()): ?>
-                        <option value="<?php echo htmlspecialchars($genere['categoria']); ?>"
-                                <?php echo isset($_GET['categoria']) && $_GET['categoria'] === $genere['categoria'] ? 'selected' : ''; ?>>
-                            <?php echo htmlspecialchars($genere['categoria']); ?>
+                    <?php 
+                    // Genera le opzioni per i generi dal file XML
+                    $generi = array_unique(array_column($giochi, 'categoria'));
+                    foreach ($generi as $genereOpzione): ?>
+                        <option value="<?php echo htmlspecialchars($genereOpzione); ?>"
+                                <?php echo isset($_GET['categoria']) && $_GET['categoria'] === $genereOpzione ? 'selected' : ''; ?>>
+                            <?php echo htmlspecialchars($genereOpzione); ?>
                         </option>
-                    <?php endwhile; ?>
+                    <?php endforeach; ?>
                 </select>
             </div>
 
@@ -157,12 +163,15 @@ $risultato = $connessione->query($query);
                 <span class="filtro-label">Editore:</span>
                 <select class="filtro-select" id="editore" onchange="applicaFiltri()">
                     <option value="">Tutti gli editori</option>
-                    <?php while($editore = $risultato_editori->fetch_assoc()): ?>
-                        <option value="<?php echo htmlspecialchars($editore['nome_editore']); ?>"
-                                <?php echo isset($_GET['editore']) && $_GET['editore'] === $editore['nome_editore'] ? 'selected' : ''; ?>>
-                            <?php echo htmlspecialchars($editore['nome_editore']); ?>
+                    <?php 
+                    // Genera le opzioni per gli editori dal file XML
+                    $editori = array_unique(array_column($giochi, 'nome_editore'));
+                    foreach ($editori as $editoreOpzione): ?>
+                        <option value="<?php echo htmlspecialchars($editoreOpzione); ?>"
+                                <?php echo isset($_GET['editore']) && $_GET['editore'] === $editoreOpzione ? 'selected' : ''; ?>>
+                            <?php echo htmlspecialchars($editoreOpzione); ?>
                         </option>
-                    <?php endwhile; ?>
+                    <?php endforeach; ?>
                 </select>
             </div>
         </div>
@@ -171,74 +180,62 @@ $risultato = $connessione->query($query);
     <!-- griglia dei videogiochi -->
     <div class="product-grid">
         <?php
-        if ($risultato->num_rows > 0) {
-            while ($gioco = $risultato->fetch_assoc()) {
+        // Mostra i giochi filtrati
+        if (empty($giochi)) {
+            echo "<p>Nessun gioco trovato nel catalogo.</p>";
+        } else {
+            foreach ($giochi as $gioco) {
+                // Assicurati che le chiavi esistano prima di accedervi
+                $titolo = $gioco['titolo'] ?? 'Titolo non disponibile';
+                $descrizione = $gioco['descrizione'] ?? 'Descrizione non disponibile';
+                $prezzo_originale = $gioco['prezzo_originale'] ?? 'N/A';
+                $prezzo_attuale = $gioco['prezzo_attuale'] ?? 'N/A';
+
+                // Calcola sconto
+                $prezzo_base = $prezzo_attuale !== 'N/A' ? $prezzo_attuale : $prezzo_originale;
+                $sconto = calcolaSconto($_SESSION['username'] ?? null, $prezzo_base);
+                $prezzo_finale = $sconto['prezzo_finale'] ?? $prezzo_base; // Assicurati che $sconto esista
+
                 ?>
                 <div class="product-item">
                     <a href="dettaglio_gioco.php?id=<?php echo $gioco['codice']; ?>">
                         <img src="<?php echo htmlspecialchars($gioco['immagine']); ?>" 
-                             alt="<?php echo htmlspecialchars($gioco['titolo']); ?>">
+                             alt="<?php echo htmlspecialchars($titolo); ?>">
                     </a>
-                    <h2><?php echo htmlspecialchars($gioco['titolo']); ?></h2>
-                    <p class="descrizione"><?php echo htmlspecialchars($gioco['descrizione']); ?></p>
-                    
+                    <h2><?php echo htmlspecialchars($titolo); ?></h2>
+                    <p class="descrizione"><?php echo htmlspecialchars($descrizione); ?></p>
                     
                     <div class="prezzi">
-                        <!--Calcola sconto -->
-                        <?php 
-                        $prezzo_base = $gioco['prezzo_attuale'] ?? $gioco['prezzo_originale']; //se prezzo attuale è null, allora il prezzo è quello originale
-                        $sconto = calcolaSconto($_SESSION['username'] ?? null, $prezzo_base);
-                        $prezzo_finale = $sconto['prezzo_finale'];
-                        ?>
                         <div class="prezzo-container">
-
-                            <!--Mostra prezzo scontato con bonus-->
-                            <?php if ($sconto['percentuale'] > 0): ?>
-                                <div class="prezzo-originale"><?php echo $prezzo_base; ?> crediti</div>
+                            <!-- Mostra prezzo scontato con bonus -->
+                            <?php if (isset($sconto['percentuale']) && $sconto['percentuale'] > 0): ?>
+                                <div class="prezzo-originale"><?php echo $prezzo_originale; ?> crediti</div>
                                 <div class="prezzo-scontato">
-                                    <?php echo $sconto['prezzo_finale']; ?> crediti
+                                    <?php echo $prezzo_finale; ?> crediti
                                     <span class="sconto-info">(-<?php echo $sconto['percentuale']; ?>%)</span>
                                 </div>
-                                <div class="sconto-motivo"><?php echo $sconto['motivo']; ?></div>
-                            
+                                <div class="sconto-motivo"><?php echo $sconto['motivo'] ?? ''; ?></div>
                             <?php else: ?>
-
-                                <!--Mostra prezzo scontato senza bonus-->
-                                <?php if ($gioco['prezzo_originale'] == $gioco['prezzo_attuale']): ?> <!--se coicidono gioco no sconto -->
-                                    
-                                    <div class="prezzo-scontato"><?php echo $gioco['prezzo_attuale']; ?> crediti</div>
-                                
-                                <?php else: ?> <!--gioco in sconto -->
-
-                                    <div class="prezzo-originale"><?php echo $gioco['prezzo_originale']; ?> crediti</div>
-                                    <div class="prezzo-scontato"><?php echo $gioco['prezzo_attuale']; ?> crediti</div>
-                                        
-                                <?php endif; ?>
-
-                                <?php if (isset($sconto['motivo'])): ?>
-                                    <div class="no-sconto-info"><?php echo $sconto['motivo']; ?></div>
-                                <?php endif; ?>
-
+                                <div class="prezzo-scontato"><?php echo $prezzo_attuale; ?> crediti</div>
                             <?php endif; ?>
                         </div>
                     </div>
 
                     <a href="dettaglio_gioco.php?id=<?php echo $gioco['codice']; ?>" 
-                   style="display: block; 
-                          width: 90%; 
-                          margin: 10px auto; 
-                          padding: 10px; 
-                          background-color: #007bff; 
-                          color: white; 
-                          text-align: center; 
-                          text-decoration: none; 
-                          border-radius: 5px;">
-                    Acquista
-                </a>
+                       style="display: block; 
+                              width: 90%; 
+                              margin: 10px auto; 
+                              padding: 10px; 
+                              background-color: #007bff; 
+                              color: white; 
+                              text-align: center; 
+                              text-decoration: none; 
+                              border-radius: 5px;">
+                        Acquista
+                    </a>
                 </div>
-            <?php }
-        } else {
-            echo "<p>Nessun gioco trovato nel catalogo.</p>";
+                <?php 
+            }
         }
         ?>
     </div>
