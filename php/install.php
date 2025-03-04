@@ -24,13 +24,13 @@ $connessione->query('SET FOREIGN_KEY_CHECKS = 0');
 
 // eliminiamo le tabelle nell'ordine corretto
 $tabelle = [
-    'giudizi_recensioni',
+    //'giudizi_recensioni',
     //'recensioni',
-    'bonus',
+    //'bonus',
     //'gioco_tavolo',
     'utenti',
-    'faq',
-    'carrello'
+    //'faq',
+    //'carrello'
 ];
 
 foreach ($tabelle as $tabella) {
@@ -107,7 +107,7 @@ if ($connessione->query($sql) === TRUE) {
     echo "Errore nella creazione della tabella recensioni: " . $connessione->error . "<br>";
 } */
 
-// creazione tabella giudizi_recensioni
+/* creazione tabella giudizi_recensioni
 $sql = "CREATE TABLE IF NOT EXISTS giudizi_recensioni (
     id_giudizio INT AUTO_INCREMENT PRIMARY KEY,
     id_recensione INT,
@@ -122,9 +122,9 @@ if ($connessione->query($sql) === TRUE) {
     echo "Tabella giudizi_recensioni creata con successo o già esistente<br>";
 } else {
     echo "Errore nella creazione della tabella giudizi_recensioni: " . $connessione->error . "<br>";
-}
+}  */
 
-// creazione tabella bonus
+/* creazione tabella bonus
 $sql = "CREATE TABLE IF NOT EXISTS bonus (
     id_bonus INT AUTO_INCREMENT PRIMARY KEY,
     crediti_bonus DECIMAL(10,2) NOT NULL,
@@ -138,19 +138,19 @@ if ($connessione->query($sql) === TRUE) {
     echo "Tabella bonus creata con successo o già esistente<br>";
 } else {
     echo "Errore nella creazione della tabella bonus: " . $connessione->error . "<br>";
-}
+} */
 
 
-// inserimento altri utenti (dopo gli inserimenti esistenti)
+// inserimento utenti
 $sql = "INSERT INTO utenti (nome, cognome, username, email, password, tipo_utente, crediti) VALUES 
-    ('Marco', 'Neri', 'cliente2', 'marco@email.it', 'Cliente123!', 'cliente', 75.00),
-    ('Mario', 'Rossi', 'admin1', 'admin@gaming.it', 'Admin123!', 'admin', 0.00),
-    ('Anna', 'Gialli', 'cliente3', 'anna@email.it', 'Cliente123!', 'cliente', 150.00),
-    ('Paolo', 'Viola', 'gestore2', 'paolo@gaming.it', 'Gestore123!', 'gestore', 0.00),
-    ('Laura', 'Rosa', 'admin2', 'laura@gaming.it', 'Admin123!', 'admin', 0.00),
-    ('Luca', 'Marroni', 'cliente4', 'luca@email.it', 'Cliente123!', 'cliente', 200.00),
-    ('Giuseppe', 'Bianchi', 'cliente1', 'giuseppe@email.it', 'Cliente123!', 'cliente', 100.50),
-    ('Luigi', 'Verdi', 'gestore1', 'gestore@gaming.it', 'Gestore123!', 'gestore', 0.00)";
+    ('Marco', 'Neri', 'cliente2', 'marco@email.it', 'Cliente123!', 'cliente', 75.00, FALSE),
+    ('Mario', 'Rossi', 'admin1', 'admin@gaming.it', 'Admin123!', 'admin', 0.00, FALSE),
+    ('Anna', 'Gialli', 'cliente3', 'anna@email.it', 'Cliente123!', 'cliente', 150.00, FALSE),
+    ('Paolo', 'Viola', 'gestore2', 'paolo@gaming.it', 'Gestore123!', 'gestore', 0.00, FALSE),
+    ('Laura', 'Rosa', 'admin2', 'laura@gaming.it', 'Admin123!', 'admin', 0.00, FALSE),
+    ('Luca', 'Marroni', 'cliente4', 'luca@email.it', 'Cliente123!', 'cliente', 200.00, FALSE),
+    ('Giuseppe', 'Bianchi', 'cliente1', 'giuseppe@email.it', 'Cliente123!', 'cliente', 100.50, FALSE),
+    ('Luigi', 'Verdi', 'gestore1', 'gestore@gaming.it', 'Gestore123!', 'gestore', 0.00, FALSE)";
 
 if ($connessione->query($sql) === TRUE) {
     echo "Utenti inseriti con successo<br>";
@@ -196,7 +196,7 @@ if ($connessione->query($sql) === TRUE) {
     echo "Dati inseriti nella tabella recensioni<br>";
 } */
 
-// popolamento tabella giudizi_recensioni
+/* popolamento tabella giudizi_recensioni
 $sql = "INSERT IGNORE INTO giudizi_recensioni (id_recensione, username_votante, supporto, utilita) VALUES
     (1, 'cliente2', 3, 5),
     (1, 'cliente3', 2, 4),
@@ -213,8 +213,8 @@ $sql = "INSERT IGNORE INTO giudizi_recensioni (id_recensione, username_votante, 
 if ($connessione->query($sql) === TRUE) {
     echo "Dati inseriti nella tabella giudizi_recensioni<br>";
 }
-
-// popolamento tabella bonus
+ */
+/* popolamento tabella bonus
 $sql = "INSERT IGNORE INTO bonus (crediti_bonus, codice_gioco, data_inizio, data_fine) VALUES
     (10.00, 10001, '2024-01-01', '2024-12-31'),
     (5.00, 10002, '2024-01-01', '2024-12-31'),
@@ -223,7 +223,7 @@ $sql = "INSERT IGNORE INTO bonus (crediti_bonus, codice_gioco, data_inizio, data
 
 if ($connessione->query($sql) === TRUE) {
     echo "Dati inseriti nella tabella bonus<br>";
-}
+} */
 
 // chiudiamo la connessione
 $connessione->close();
