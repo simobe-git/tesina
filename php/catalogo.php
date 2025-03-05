@@ -69,20 +69,42 @@ if (!in_array($direzione, $direzioni_permesse)) {
 }
 
 // gestione dei filtri
-$genere = isset($_GET['categoria']) ? $_GET['categoria'] : '';
+$categoria = isset($_GET['categoria']) ? $_GET['categoria'] : '';
 $editore = isset($_GET['editore']) ? $_GET['editore'] : '';
 
+// Debug: Stampa il valore della categoria selezionata
+echo "<pre>Categoria selezionata: " . htmlspecialchars($categoria) . "</pre>";
+
 // Filtraggio dei giochi
-if ($genere) {
-    $giochi = array_filter($giochi, function($gioco) use ($genere) {
-        return $gioco['categoria'] === $genere;
+if ($categoria) {
+    $giochiFiltrati = array_filter($giochi, function($gioco) use ($categoria) {
+        return $gioco['categoria'] === $categoria;
     });
+    
+    // Debug: Stampa i giochi filtrati
+    echo "<pre>Giochi filtrati per categoria: " . htmlspecialchars($categoria) . "</pre>";
+    print_r($giochiFiltrati);
+    
+    $giochi = $giochiFiltrati; // Aggiorna l'array dei giochi
 }
 if ($editore) {
     $giochi = array_filter($giochi, function($gioco) use ($editore) {
         return $gioco['nome_editore'] === $editore;
     });
 }
+
+// Ordinamento dei giochi
+usort($giochi, function($a, $b) use ($ordinamento, $direzione) {
+    if ($ordinamento === 'prezzo') {
+        $prezzoA = $a['prezzo_attuale'] ?? $a['prezzo_originale'];
+        $prezzoB = $b['prezzo_attuale'] ?? $b['prezzo_originale'];
+        return $direzione === 'ASC' ? $prezzoA <=> $prezzoB : $prezzoB <=> $prezzoA;
+    } elseif ($ordinamento === 'data_rilascio') {
+        return $direzione === 'ASC' ? $a['data_rilascio'] <=> $b['data_rilascio'] : $b['data_rilascio'] <=> $a['data_rilascio'];
+    } else { // ordinamento per titolo
+        return $direzione === 'ASC' ? strcmp($a['titolo'], $b['titolo']) : strcmp($b['titolo'], $a['titolo']);
+    }
+});
 
 // Non è più necessario eseguire una query sul database per ottenere i giochi
 // $query = "SELECT *, 
@@ -121,10 +143,10 @@ if ($editore) {
     <?php include('menu.php'); ?>
 
     <header class="intestazione-negozio">
-        <h1>Catalogo Giochi da Tavolo</h1>
+        <h1 style="margin-top: 7ex;">Catalogo Giochi da Tavolo</h1>
     </header>
 
-    <div class="filtri-sezione">
+    <div class="filtri-sezione" style="margin-top: 3em;">
         <div class="filtri-wrapper">
             <div class="filtro-box">
                 <span class="filtro-label">Ordina per:</span>
@@ -144,16 +166,16 @@ if ($editore) {
             </div>
 
             <div class="filtro-box">
-                <span class="filtro-label">Genere:</span>
-                <select class="filtro-select" id="genere" onchange="applicaFiltri()">
+                <span class="filtro-label">Categoria:</span>
+                <select class="filtro-select" id="categoria" onchange="applicaFiltri()">
                     <option value="">Tutti i generi</option>
                     <?php 
-                    // Genera le opzioni per i generi dal file XML
-                    $generi = array_unique(array_column($giochi, 'categoria'));
-                    foreach ($generi as $genereOpzione): ?>
-                        <option value="<?php echo htmlspecialchars($genereOpzione); ?>"
-                                <?php echo isset($_GET['categoria']) && $_GET['categoria'] === $genereOpzione ? 'selected' : ''; ?>>
-                            <?php echo htmlspecialchars($genereOpzione); ?>
+                    // Genera le opzioni per le categorie dal file XML
+                    $categorie = array_unique(array_column($giochi, 'categoria'));
+                    foreach ($categorie as $categoriaOpzione): ?>
+                        <option value="<?php echo htmlspecialchars($categoriaOpzione); ?>"
+                                <?php echo isset($_GET['categoria']) && $_GET['categoria'] === $categoriaOpzione ? 'selected' : ''; ?>>
+                            <?php echo htmlspecialchars($categoriaOpzione); ?>
                         </option>
                     <?php endforeach; ?>
                 </select>
@@ -178,7 +200,7 @@ if ($editore) {
     </div>
 
     <!-- griglia dei videogiochi -->
-    <div class="product-grid">
+    <div class="product-grid" style="margin-top: 3em;">
         <?php
         // Mostra i giochi filtrati
         if (empty($giochi)) {

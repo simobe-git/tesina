@@ -2,7 +2,7 @@
 <recensioni>
     <recensione id="1">
         <username>cliente1</username>
-        <codice_gioco>11111</codice_gioco>
+        <codice_gioco>1</codice_gioco>
         <testo>Ottimo gioco, grafica spettacolare e gameplay coinvolgente!</testo>
         <data>2024-03-15</data>
         <giudizi>

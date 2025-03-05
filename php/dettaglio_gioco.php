@@ -11,56 +11,41 @@ if (isset($_SESSION['ruolo']) && $_SESSION['ruolo'] === 'admin') {
 
 $id_gioco = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 
-// recupera i dettagli del gioco
-$query = "SELECT * FROM gioco_tavolo WHERE codice = ?";
-$stmt = $connessione->prepare($query);
-$stmt->bind_param("i", $id_gioco);
-$stmt->execute();
-$gioco = $stmt->get_result()->fetch_assoc();
+// caricamento dei giochi dal file XML
+$xml = simplexml_load_file('../xml/giochi.xml'); // Carica il file XML
+$giochi = json_decode(json_encode($xml), true); // Converte l'XML in un array
+
+// troviamo il gioco specifico
+$gioco = null;
+foreach ($giochi['gioco'] as $g) {
+    if ($g['codice'] == $id_gioco) {
+        $gioco = $g;
+        break;
+    }
+}
 
 if (!$gioco) {
     header('Location: catalogo.php');
     exit();
 }
 
-// recupera le recensioni del gioco
-$query = "SELECT r.*, u.username, 
-          (SELECT AVG(supporto) FROM giudizi_recensioni WHERE id_recensione = r.id_recensione) as media_supporto,
-          (SELECT AVG(utilita) FROM giudizi_recensioni WHERE id_recensione = r.id_recensione) as media_utilita
-          FROM recensioni r 
-          JOIN utenti u ON r.username = u.username 
-          WHERE r.codice_gioco = ?
-          ORDER BY r.data_recensione DESC";
-$stmt = $connessione->prepare($query);
-$stmt->bind_param("i", $id_gioco);
-$stmt->execute();
-$recensioni = $stmt->get_result();
-
-// carichiamo le discussioni del forum per questo gioco
-function caricaDiscussioni($id_gioco) {
-    $xmlFile = '../xml/domande.xml';
-    if (file_exists($xmlFile)) {
-        $domande = simplexml_load_file($xmlFile);
-        $discussioni = [];
-        foreach ($domande->domanda as $domanda) {
-            if ((string)$domanda->codiceGioco === (string)$id_gioco) {
-                $discussioni[] = $domanda;
-            }
-        }
-        return $discussioni;
-    }
-    return [];
-}
-
-$discussioni = caricaDiscussioni($id_gioco);
-
 // calcola sconto e bonus
 $sconto = calcolaSconto($_SESSION['username'] ?? null, $gioco['prezzo_originale']);
-$bonus = getBonusDisponibili($id_gioco);
+//PER ORA NO     $bonus = getBonusDisponibili($id_gioco); // Assicurati che questa funzione funzioni con i dati XML
 
-// DEBUG
-if (empty($bonus)) {
-    error_log("Nessun bonus trovato per il gioco ID: " . $id_gioco);
+// caricamento delle recensioni dal file XML
+$recensioniXml = simplexml_load_file('../xml/recensioni.xml'); // Carica il file XML delle recensioni
+$recensioni = []; // è un array per memorizzare le recensioni filtrate
+
+foreach ($recensioniXml->recensione as $rec) {
+    if ((int)$rec->codice_gioco === $id_gioco) {
+        $recensioni[] = [
+            'username' => (string)$rec->username,
+            'testo' => (string)$rec->testo,
+            'data' => (string)$rec->data,
+            'giudizi' => $rec->giudizi->giudizio // per gestire i giudizi (PIU AVANTI)
+        ];
+    }
 }
 ?>
 
@@ -174,6 +159,7 @@ if (empty($bonus)) {
     </style>
 </head>
 <body>
+
     <?php include('menu.php'); ?>
 
     <div class="dettaglio-container">
@@ -188,7 +174,7 @@ if (empty($bonus)) {
                     <div class="dettagli">
                         <p><strong>Categoria:</strong> <?php echo htmlspecialchars($gioco['categoria']); ?></p>
                         <p><strong>Giocatori:</strong> <?php echo htmlspecialchars($gioco['min_num_giocatori']); ?> - <?php echo htmlspecialchars($gioco['max_num_giocatori']); ?></p>
-                        <p><strong>Et&aacute; Minima:</strong> <?php echo htmlspecialchars($gioco['min_eta']); ?></p>
+                        <p><strong>Età Minima:</strong> <?php echo htmlspecialchars($gioco['min_eta']); ?></p>
                         <p><strong>Durata Partita:</strong> <?php echo htmlspecialchars($gioco['avg_partita']); ?></p>
                         <p><strong>Pubblicazione:</strong> <?php
                                                             $date = new DateTime($gioco['data_rilascio']);  
@@ -201,7 +187,7 @@ if (empty($bonus)) {
                         <p><strong>Ambientazione:</strong> <?php echo htmlspecialchars($gioco['ambientazione']); ?></p>
                     </div>
                     
-                    <!-- Variazione di prezzo con sconto -->
+                    <!-- variazione di prezzo con sconto -->
                     <div class="prezzi-acquisto">
                         <?php if ($sconto['percentuale'] > 0): ?>
                             <div class="prezzo-originale"><?php echo htmlspecialchars($gioco['prezzo_originale']); ?> crediti</div>
@@ -211,7 +197,7 @@ if (empty($bonus)) {
                             </div>
                             <div class="sconto-motivo"><?php echo $sconto['motivo']; ?></div>
 
-                        <!-- Gioco in offerta (mostriamo la variazione di prezzo)-->
+                        <!-- gioco in offerta (mostriamo la variazione di prezzo)-->
                         <?php elseif($gioco['prezzo_originale'] != $gioco['prezzo_attuale']): ?>
                             <div class="prezzo-originale"><?php echo htmlspecialchars($gioco['prezzo_originale']); ?> crediti</div>
                             <div class="prezzo-scontato"> <?php echo htmlspecialchars($gioco['prezzo_attuale']); ?> crediti</div>
@@ -256,31 +242,30 @@ if (empty($bonus)) {
                 <?php endif; ?>
 
                 <div class="recensioni-container">
-                    <?php 
-                    $count = 0;
-                    while ($recensione = $recensioni->fetch_assoc()): 
-                        if ($count < 3): // inizialemnente mostriamo solo le prime 3 recensioni
+                    <?php
+                    if (empty($recensioni)){ // facciamo controllo che non ci siano recensioni
+                        echo "<p>Non ci sono ancora recensioni per questo gioco.</p>";
+                    } else {
+                        $count = 0;
+                        foreach ($recensioni as $recensione): 
+                            if ($count < 3): // mostriamo solo le prime 3 recensioni
                     ?>
                         <div class="recensione">
                             <div class="recensione-header">
                                 <span class="recensione-autore"><?php echo htmlspecialchars($recensione['username']); ?></span>
-                                <span class="recensione-data"><?php echo date('d/m/Y', strtotime($recensione['data_recensione'])); ?></span>
+                                <span class="recensione-data"><?php echo date('d/m/Y', strtotime($recensione['data'])); ?></span>
                             </div>
                             <p class="recensione-testo"><?php echo htmlspecialchars($recensione['testo']); ?></p>
-                            <div class="recensione-valutazioni">
-                                <span>Supporto: <?php echo number_format($recensione['media_supporto'], 1); ?>/3</span>
-                                <span>Utilità: <?php echo number_format($recensione['media_utilita'], 1); ?>/5</span>
-                            </div>
                         </div>
                     <?php 
-                        endif;
-                        $count++;
-                    endwhile; 
-                    
-                    if ($count > 3): // mostriamo il pulsante di ampliamento solo se ci sono più di 3 recensioni
+                            endif;
+                            $count++;
+                        endforeach; 
+                        if ($count > 3): // mostriamo il pulsante di ampliamento solo se ci sono più di 3 recensioni
                     ?>
                         <button class="btn-mostra-altro" onclick="mostraAltreRecensioni()">Mostra altre recensioni</button>
                     <?php endif; ?>
+                    <?php } ?>
                 </div>
             </div>
 
@@ -293,7 +278,9 @@ if (empty($bonus)) {
                         <textarea name="testo" required placeholder="Fai una domanda..."></textarea>
                         <button type="submit" class="btn-primary">Apri discussione</button>
                     </form>
-                <?php elseif (!empty($discussioni)): ?>
+                <?php elseif (empty($discussioni)): ?>
+                    <p>Non ci sono ancora discussioni per questo gioco.</p>
+                <?php else: ?>
                     <div class="discussioni-container">
                         <?php foreach ($discussioni as $discussione): ?>
                             <div class="discussione">
@@ -324,7 +311,7 @@ if (empty($bonus)) {
             const recensioniNascoste = document.querySelectorAll('.recensione.nascosta');
             const btnMostraAltro = document.querySelector('.btn-mostra-altro');
             
-            // mostra le prossime 3 recensioni
+            // mostriamo le prossime 3 recensioni
             let count = 0;
             recensioniNascoste.forEach(recensione => {
                 if (count < 3) {
@@ -333,7 +320,7 @@ if (empty($bonus)) {
                 }
             });
             
-            // nascondi il pulsante se non ci sono più recensioni da mostrare
+            // nascondiamo il pulsante se non ci sono più recensioni da mostrare
             if (document.querySelectorAll('.recensione.nascosta').length === 0) {
                 btnMostraAltro.style.display = 'none';
             }

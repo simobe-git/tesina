@@ -77,6 +77,19 @@ if ($editore) {
     });
 }
 
+// Ordinamento dei giochi in offerta
+usort($giochiInOfferta, function($a, $b) use ($ordinamento, $direzione) {
+    if ($ordinamento === 'prezzo') {
+        $prezzoA = $a['prezzo_attuale'] ?? $a['prezzo_originale'];
+        $prezzoB = $b['prezzo_attuale'] ?? $b['prezzo_originale'];
+        return $direzione === 'ASC' ? $prezzoA <=> $prezzoB : $prezzoB <=> $prezzoA;
+    } elseif ($ordinamento === 'data_rilascio') {
+        return $direzione === 'ASC' ? $a['data_rilascio'] <=> $b['data_rilascio'] : $b['data_rilascio'] <=> $a['data_rilascio'];
+    } else { // ordinamento per titolo
+        return $direzione === 'ASC' ? strcmp($a['titolo'], $b['titolo']) : strcmp($b['titolo'], $a['titolo']);
+    }
+});
+
 ?>
 <!DOCTYPE html>
 <html lang="it">
